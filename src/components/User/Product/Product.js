@@ -1,21 +1,41 @@
-import React from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Dropdown } from 'react-bootstrap';
+import Categories from './Categories';
+import { getAllProduct, clearErrors } from '../../../action/ProductAction'
+import { useDispatch, useSelector } from "react-redux";
+import { useAlert } from "react-alert";
+import Lodder from "../layout/Loader";
 
 const Product = () => {
+
+  const dispatch = useDispatch();
+  const alert = useAlert();
+
+  const { allproduct, error } = useSelector((state) => state.allProduct);
+
+  console.log(allproduct, "all")
+
+  useEffect(() => {
+    if (error) {
+      dispatch(clearErrors());
+    }
+    dispatch(getAllProduct());
+  }, []);
+
   return (
     <div>
-      <div class="wrapper bg-dark-white">
+      <div className="wrapper bg-dark-white">
 
-        <div class="heading-banner-area overlay-bg">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="heading-banner">
-                  <div class="heading-banner-title">
+        <div className="heading-banner-area overlay-bg">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="heading-banner">
+                  <div className="heading-banner-title">
                     <h2>Products</h2>
                   </div>
-                  <div class="breadcumbs pb-15">
+                  <div className="breadcumbs pb-15">
                     <ul>
                       <li><NavLink to='/'>Home</NavLink></li>
                       <li>Products</li>
@@ -27,425 +47,139 @@ const Product = () => {
           </div>
         </div>
 
-        <div class="product-area pt-80 pb-80 product-style-2">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-3 col-sm-12 col-xs-12">
+        <div className="product-area pt-80 pb-80 product-style-2">
+          <div className="container">
 
-                <aside class="widget widget-search mb-30">
-                  <form action="#">
+            <div className="row">
+              <div className="col-md-3 col-sm-12 col-xs-12">
+                <aside className="widget widget-search mb-30">
+                  <form action="">
                     <input type="text" placeholder="Search here..." />
                     <button type="submit">
-                      <i class="zmdi zmdi-search"></i>
+                      <i className="zmdi zmdi-search"></i>
                     </button>
                   </form>
                 </aside>
 
-                <aside class="widget widget-categories  mb-30">
-                  <div class="widget-title">
-                    <h4>Categories</h4>
-                  </div>
-                  <div id="cat-treeview" class="widget-info product-cat boxscrol2">
-                    <ul>
-                      
-                    </ul>
-                  </div>
-                </aside>
-
-                <aside class="widget shop-filter mb-30">
-                  <div class="widget-title">
-                    <h4>Price</h4>
-                  </div>
-                  <div class="widget-info">
-                    <div class="price_filter">
-                      <div class="price_slider_amount">
-                        <input type="submit" value="You range :" />
-                        <input type="text" id="amount" name="price" placeholder="Add Your Price" />
-                      </div>
-                      <div id="slider-range"></div>
-                    </div>
-                  </div>
-                </aside>
-
-                <aside class="widget widget-color mb-30">
-                  <div class="widget-title">
-                    <h4>Color</h4>
-                  </div>
-                  <div class="widget-info color-filter clearfix">
-                    <ul>
-                      <li><a href="#"><span class="color color-1"></span>LightSalmon<span
-                        class="count">12</span></a></li>
-                      <li><a href="#"><span class="color color-2"></span>Dark Salmon<span
-                        class="count">20</span></a></li>
-                      <li><a href="#"><span class="color color-3"></span>Tomato<span
-                        class="count">59</span></a></li>
-                      <li class="active"><a href="#"><span class="color color-4"></span>Deep Sky Blue<span
-                        class="count">45</span></a></li>
-                      <li><a href="#"><span class="color color-5"></span>Electric Purple<span
-                        class="count">78</span></a></li>
-                      <li><a href="#"><span class="color color-6"></span>Atlantis<span
-                        class="count">10</span></a></li>
-                      <li><a href="#"><span class="color color-7"></span>Deep Lilac<span
-                        class="count">15</span></a></li>
-                    </ul>
-                  </div>
-                </aside>
-
-                <aside class="widget widget-size mb-30">
-                  <div class="widget-title">
-                    <h4>Size</h4>
-                  </div>
-                  <div class="widget-info size-filter clearfix">
-                    <ul>
-                      <li><a href="#">M</a></li>
-                      <li class="active"><a href="#">S</a></li>
-                      <li><a href="#">L</a></li>
-                      <li><a href="#">SL</a></li>
-                      <li><a href="#">XL</a></li>
-                    </ul>
-                  </div>
-                </aside>
-
-                <aside class="widget widget-banner hidden-sm">
-                  <div class="widget-info widget-banner-img">
-                    <a href="#"><img src="img/banner/5.jpg" alt="" /></a>
-                  </div>
-                </aside>
+                <Categories />
 
               </div>
-              <div class="col-md-9 col-sm-12 col-xs-12">
 
-                <div class="shop-content mt-tab-30 mt-xs-30">
-                  <div class="product-option mb-30 clearfix">
+              <div className="col-md-9 col-sm-12 col-xs-12">
 
-                    <ul class="shop-tab">
-                      <li class="active"><a href="#grid-view" data-toggle="tab"><i
-                        class="zmdi zmdi-view-module"></i></a></li>
-                      <li><a href="#list-view" data-toggle="tab"><i class="zmdi zmdi-view-list"></i></a>
+                <div className="shop-content mt-tab-30 mt-xs-30">
+                  <div className="product-option mb-30 clearfix">
+
+                    <ul className="shop-tab">
+                      <li className="active"><a href="#grid-view" data-toggle="tab"><i
+                        className="zmdi zmdi-view-module"></i></a></li>
+                      <li><a href="#list-view" data-toggle="tab"><i className="zmdi zmdi-view-list"></i></a>
                       </li>
                     </ul>
-                    <div class="showing text-right hidden-xs">
-                      <p class="mb-0">Showing 01-09 of 17 Results</p>
+                    <div className="showing text-right hidden-xs">
+                      <p className="mb-0">Showing 01-09 of 17 Results</p>
                     </div>
                   </div>
 
-                  <div class="tab-content">
-                    <div class="tab-pane active" id="grid-view">
-                      <div class="row">
+                  <div className="tab-content">
 
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                          <div class="single-product">
-                            <div class="product-img">
-                              <span class="pro-label new-label">new</span>
-                              <a href="single-product.html"><img src="img/product/6.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info clearfix text-center">
-                              <div class="fix">
-                                <h4 class="post-title"><a href="#">Comfort Handy Craft</a></h4>
-                                <div class="product-price"><span
-                                  class="price-1">$42.00</span>&nbsp;<span
-                                    class="price-2">$65.00</span></div>
+                    <div className="tab-pane active" id="grid-view">
+                      <div className="row">
+                        {allproduct && allproduct.length > 0 && (
+                          <>
+                            {allproduct?.map((products) => (
+                              <div key={products.id} className="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                <div className="single-product">
+                                  <Fragment >
+                                    <div className="product-img">
+                                      <span className="pro-label new-label">new</span>
+                                      <NavLink to={`/products-details/${products.id}`}>
+                                        <img
+                                          src={
+                                            products.ProductImages.length
+                                              ? products.ProductImages[0]
+                                                .path
+                                              : ""
+                                          }
+                                          alt={products.ProductFlat.name}
+                                        />
+                                      </NavLink>
+                                    </div>
+                                    <div className="product-info clearfix text-center">
+                                      <div className="fix">
+                                        <h4 className="post-title">{products.ProductFlat.name}</h4>
+                                        <div className="product-price"><span
+                                          className="price-1">${products.ProductFlat.price}</span></div>
+                                      </div>
+                                    </div>
+                                  </Fragment>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                          <div class="single-product">
-                            <div class="product-img">
-                              <span class="pro-label sale-label">Sale</span>
-                              <a href="single-product.html"><img src="img/product/3.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info clearfix text-center">
-                              <div class="fix">
-                                <h4 class="post-title"><a href="#">Comfort Handy Craft</a></h4>
-                                <div class="product-price"><span
-                                  class="price-1">$42.00</span>&nbsp;<span
-                                    class="price-2">$65.00</span></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                          <div class="single-product">
-                            <div class="product-img">
-                              <a href="single-product.html"><img src="img/product/7.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info clearfix text-center">
-                              <div class="fix">
-                                <h4 class="post-title"><a href="#">Comfort Handy Craft</a></h4>
-                                <div class="product-price"><span
-                                  class="price-1">$42.00</span>&nbsp;<span
-                                    class="price-2">$65.00</span></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                          <div class="single-product">
-                            <div class="product-img">
-                              <span class="pro-label sale-label">sale</span>
-                              <a href="single-product.html"><img src="img/product/10.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info clearfix text-center">
-                              <div class="fix">
-                                <h4 class="post-title"><a href="#">Comfort Handy Craft</a></h4>
-                                <div class="product-price"><span
-                                  class="price-1">$42.00</span>&nbsp;<span
-                                    class="price-2">$65.00</span></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                          <div class="single-product">
-                            <div class="product-img">
-                              <a href="single-product.html"><img src="img/product/8.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info clearfix text-center">
-                              <div class="fix">
-                                <h4 class="post-title"><a href="#">Comfort Handy Craft</a></h4>
-                                <div class="product-price"><span
-                                  class="price-1">$42.00</span>&nbsp;<span
-                                    class="price-2">$65.00</span></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                          <div class="single-product">
-                            <div class="product-img">
-                              <span class="pro-label new-label">new</span>
-                              <a href="single-product.html"><img src="img/product/11.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info clearfix text-center">
-                              <div class="fix">
-                                <h4 class="post-title"><a href="#">Comfort Handy Craft</a></h4>
-                                <div class="product-price"><span
-                                  class="price-1">$42.00</span>&nbsp;<span
-                                    class="price-2">$65.00</span></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                          <div class="single-product">
-                            <div class="product-img">
-                              <span class="pro-label new-label">new</span>
-                              <a href="single-product.html"><img src="img/product/2.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info clearfix text-center">
-                              <div class="fix">
-                                <h4 class="post-title"><a href="#">Comfort Handy Craft</a></h4>
-                                <div class="product-price"><span
-                                  class="price-1">$42.00</span>&nbsp;<span
-                                    class="price-2">$65.00</span></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                          <div class="single-product">
-                            <div class="product-img">
-                              <a href="single-product.html"><img src="img/product/1.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info clearfix text-center">
-                              <div class="fix">
-                                <h4 class="post-title"><a href="#">Comfort Handy Craft</a></h4>
-                                <div class="product-price"><span
-                                  class="price-1">$42.00</span>&nbsp;<span
-                                    class="price-2">$65.00</span></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 hidden-sm col-xs-12">
-                          <div class="single-product">
-                            <div class="product-img">
-                              <span class="pro-label new-label">new</span>
-                              <a href="single-product.html"><img src="img/product/12.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info clearfix text-center">
-                              <div class="fix">
-                                <h4 class="post-title"><a href="#">Comfort Handy Craft</a></h4>
-                                <div class="product-price"><span
-                                  class="price-1">$42.00</span>&nbsp;<span
-                                    class="price-2">$65.00</span></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
+                            ))}
+                          </>
+                        )}
                       </div>
                     </div>
-                    <div class="tab-pane" id="list-view">
-                      <div class="row shop-list">
 
-                        <div class="col-lg-12">
-                          <div class="single-product clearfix">
-                            <div class="product-img">
-                              <span class="pro-label new-label">new</span>
-                              <a href="single-product.html"><img src="img/product/6.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info">
-                              <div class="fix">
-                                <h4 class="post-title floatleft"><a href="#">dummy Product
-                                  name</a></h4>
-                              </div>
-                              <div class="product-price mb-10"><span
-                                class="price-1">$42.00</span>&nbsp;<span
-                                  class="price-2">$65.00</span></div>
-                              <div class="product-description">
-                                <p>There are many variations of passages of Lorem Ipsum
-                                  available, but the majority have be suffered alteration in
-                                  some form, by injected humour, or randomised words which
-                                  donot look even slightly believable. If you are going to use
-                                  a passage of Lorem Ipsum, you neede be sure there isn't
-                                  anythin going to use a passage embarrassing.</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
 
-                        <div class="col-lg-12">
-                          <div class="single-product clearfix">
-                            <div class="product-img">
-                              <span class="pro-label new-label">new</span>
-                              <a href="single-product.html"><img src="img/product/3.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info">
-                              <div class="fix">
-                                <h4 class="post-title floatleft"><a href="#">dummy Product
-                                  name</a></h4>
-                              </div>
-                              <div class="product-price mb-10"><span
-                                class="price-1">$42.00</span>&nbsp;<span
-                                  class="price-2">$65.00</span></div>
-                              <div class="product-description">
-                                <p>There are many variations of passages of Lorem Ipsum
-                                  available, but the majority have be suffered alteration in
-                                  some form, by injected humour, or randomised words which
-                                  donot look even slightly believable. If you are going to use
-                                  a passage of Lorem Ipsum, you neede be sure there isn't
-                                  anythin going to use a passage embarrassing.</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
 
-                        <div class="col-lg-12">
-                          <div class="single-product clearfix">
-                            <div class="product-img">
-                              <span class="pro-label new-label">new</span>
-                              <a href="single-product.html"><img src="img/product/2.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info">
-                              <div class="fix">
-                                <h4 class="post-title floatleft"><a href="#">dummy Product
-                                  name</a></h4>
-                              </div>
-                              <div class="product-price mb-10"><span
-                                class="price-1">$42.00</span>&nbsp;<span
-                                  class="price-2">$65.00</span></div>
-                              <div class="product-description">
-                                <p>There are many variations of passages of Lorem Ipsum
-                                  available, but the majority have be suffered alteration in
-                                  some form, by injected humour, or randomised words which
-                                  donot look even slightly believable. If you are going to use
-                                  a passage of Lorem Ipsum, you neede be sure there isn't
-                                  anythin going to use a passage embarrassing.</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                    <div className="tab-pane" id="list-view">
 
-                        <div class="col-lg-12">
-                          <div class="single-product clearfix">
-                            <div class="product-img">
-                              <span class="pro-label new-label">new</span>
-                              <a href="single-product.html"><img src="img/product/10.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info">
-                              <div class="fix">
-                                <h4 class="post-title floatleft"><a href="#">dummy Product
-                                  name</a></h4>
-                              </div>
-                              <div class="product-price mb-10"><span
-                                class="price-1">$42.00</span>&nbsp;<span
-                                  class="price-2">$65.00</span></div>
-                              <div class="product-description">
-                                <p>There are many variations of passages of Lorem Ipsum
-                                  available, but the majority have be suffered alteration in
-                                  some form, by injected humour, or randomised words which
-                                  donot look even slightly believable. If you are going to use
-                                  a passage of Lorem Ipsum, you neede be sure there isn't
-                                  anythin going to use a passage embarrassing.</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                      {allproduct && allproduct.length > 0 && (
+                        <>
+                          {allproduct?.map((products) => (
 
-                        <div class="col-lg-12">
-                          <div class="single-product clearfix">
-                            <div class="product-img">
-                              <span class="pro-label new-label">new</span>
-                              <a href="single-product.html"><img src="img/product/12.jpg"
-                                alt="" /></a>
-                            </div>
-                            <div class="product-info">
-                              <div class="fix">
-                                <h4 class="post-title floatleft"><a href="#">dummy Product
-                                  name</a></h4>
+                            <div key={products.id} className="row shop-list">
+                              <div className="col-lg-12">
+                                <div className="single-product clearfix">
+                                  <div className="product-img">
+                                    <span className="pro-label new-label">new</span>
+                                    <NavLink to={`/products-details/${products.id}`}>
+                                        <img
+                                          src={
+                                            products.ProductImages.length
+                                              ? products.ProductImages[0]
+                                                .path
+                                              : ""
+                                          }
+                                          alt={products.ProductFlat.name}
+                                        />
+                                      </NavLink>
+                                  </div>
+                                  <div className="product-info">
+                                    <div className="fix">
+                                      <h4 className="post-title floatleft">{products.ProductFlat.name}</h4>
+                                    </div>
+                                    <div className="product-price mb-10"><span
+                                      className="price-1">${products.ProductFlat.price}</span></div>
+                                    <div className="product-description">
+                                      <p dangerouslySetInnerHTML={{ __html: products.ProductFlat.description }} />
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                              <div class="product-price mb-10"><span
-                                class="price-1">$42.00</span>&nbsp;<span
-                                  class="price-2">$65.00</span></div>
-                              <div class="product-description">
-                                <p>There are many variations of passages of Lorem Ipsum
-                                  available, but the majority have be suffered alteration in
-                                  some form, by injected humour, or randomised words which
-                                  donot look even slightly believable. If you are going to use
-                                  a passage of Lorem Ipsum, you neede be sure there isn't
-                                  anythin going to use a passage embarrassing.</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
 
-                      </div>
+                            </div>
+                          ))}
+
+                        </>
+                      )}
+
+
                     </div>
+
                   </div>
 
-                  <div class="shop-pagination  text-center">
-                    <div class="pagination">
+                  <div className="shop-pagination  text-center">
+                    <div className="pagination">
                       <ul>
-                        <li><a href="#"><i class="zmdi zmdi-long-arrow-left"></i></a></li>
+                        <li><a href="#"><i className="zmdi zmdi-long-arrow-left"></i></a></li>
                         <li><a href="#">01</a></li>
-                        <li class="active"><a href="#">02</a></li>
+                        <li className="active"><a href="#">02</a></li>
                         <li><a href="#">03</a></li>
                         <li><a href="#">04</a></li>
                         <li><a href="#">05</a></li>
-                        <li><a href="#"><i class="zmdi zmdi-long-arrow-right"></i></a></li>
+                        <li><a href="#"><i className="zmdi zmdi-long-arrow-right"></i></a></li>
                       </ul>
                     </div>
                   </div>

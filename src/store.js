@@ -12,7 +12,7 @@ import {
 } from "./reducer/AuthReducer"
 import {contactUsReducer} from "./reducer/ContactUsReducer"
 import { updateProfileReducer} from "./reducer/ProfileReducer"
-import {productDetailReducer} from "./reducer/ProductsRecucer"
+import {productDetailReducer, filtersReducer, getAllProductReducer} from "./reducer/ProductsRecucer"
  
 const reducer = combineReducers({
     banners: bannerReducer,
@@ -26,7 +26,9 @@ const reducer = combineReducers({
     resetPassword: resetPasswordReducer,
     contactUs: contactUsReducer,
     profileUpdate: updateProfileReducer,
-    product: productDetailReducer
+    product: productDetailReducer,
+    filters: filtersReducer,
+    allProduct: getAllProductReducer
 })
 
 const initialState = {};
