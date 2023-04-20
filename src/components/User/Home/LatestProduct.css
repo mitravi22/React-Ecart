@@ -1,0 +1,11 @@
+.col-lg-4.col-md-4.col-sm-4.col-xs-12.latestproduct {
+    width: 100% !important;
+}
+
+.image-text {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

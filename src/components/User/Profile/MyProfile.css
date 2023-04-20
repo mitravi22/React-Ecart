@@ -1,0 +1,138 @@
+.image-account {
+    height: 300px;
+}
+
+.header-image {
+    position: relative;
+}
+.account {
+    text-align: center;
+   
+}
+
+table,td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    height: 30px;
+    width: 40px;
+  }
+  tr {
+    border-bottom: 1px solid #ddd;
+  }
+  td{
+    padding: 5px;
+  }
+  tbody{
+    box-sizing: border-box;
+  }
+  .table-wrapper{
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 25px;
+
+  }
+
+  .center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .info {
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  .btnEdit {
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+
+  .btnEdit > button {
+    border: 1px solid;
+  }
+
+  
+.register {
+   padding: 20px 80px;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"] {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+button[type="submit"] {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+button[type="submit"]:hover {
+  background-color: #0069d9;
+}
+
+.main-heading{
+    text-align: center;
+}
+
+.link {
+    color: #FB9400 ;
+}
+
+.image-link{
+  width: 40px;
+  height: 40px;
+}
+.registerImage > input {
+  display: flex;
+  padding: 0%;
+}
+
+.registerImage > input::first-slector-button {
+  cursor: pointer;
+  width: 100%;
+  z-index: 2;
+  height: 5vh;
+  border: none;
+  margin: 1%;
+  font: 400 0.8vmax cursive;
+  transition: all 0.5s;
+  padding: 20px;
+  color: rgba(0, 0, 0, 0.623);
+  background-color: rgb(255, 255, 255);
+}
+
+.success{
+    margin-top: 50px;
+    text-align: center;
+}
+
+.success > div {
+  margin-top: 25px;
+  margin-bottom: 50px;
+}
+
+.success > div > p {
+  margin-top: 25px;
+  font-size: 2rem;
+}
+
+.frgt{
+  margin-top: 50px;
+  text-align: center;
+  margin-bottom: 25px;
+ }
