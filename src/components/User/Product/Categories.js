@@ -10,9 +10,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import Lodder from "../layout/Loader";
 import { DropdownButton, Dropdown, Form } from "react-bootstrap";
+import { Slider } from "@material-ui/core";
 
-const Categories = () => {
-  
+const Categories = ({ handlePrice }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
@@ -40,10 +40,15 @@ const Categories = () => {
 
   const [activeMenu, setActiveMenu] = useState("main");
   const [hoveredMenu, setHoveredMenu] = useState(null);
-  const [price, setPrice] = useState(40);
+  const [price, setPrice] = useState([0, 1000]);
 
   const handleMouseEnter = (menu) => {
     setHoveredMenu(menu);
+  };
+
+  const handleChange = (event, newValue) => {
+    setPrice(newValue);
+    // handlePrice(price[0],price[1])
   };
 
   const handleMouseLeave = () => {
@@ -58,9 +63,9 @@ const Categories = () => {
     setActiveMenu("main");
   };
 
-  const handlePrice = (e) => {
-    setPrice(e.target.value);
-  }
+  // const handlePrice = (e) => {
+  //   setPrice(e.target.value);
+  // }
 
   useEffect(() => {
     if (error) {
@@ -73,9 +78,7 @@ const Categories = () => {
 
   return (
     <Fragment>
-
       <div>
-
         <aside className="widget widget-categories  mb-30">
           <div className="widget-title">
             <h4>Categories</h4>
@@ -102,7 +105,8 @@ const Categories = () => {
                 <div
                   className="submenu-container"
                   onMouseEnter={() => handleMouseEnter(activeMenu)}
-                  onMouseLeave={handleMouseLeave}>
+                  onMouseLeave={handleMouseLeave}
+                >
                   <ul className="submenu">
                     {activeMenu.children?.map((subcategory) => (
                       <li key={subcategory.id} className="submenu-item">
@@ -115,26 +119,35 @@ const Categories = () => {
                   </ul>
 
                   {hoveredMenu && hoveredMenu.children && (
-                    <div div
+                    <div
+                      div
                       className="submenu-container"
                       onMouseEnter={() => handleMouseEnter(activeMenu)}
-                      onMouseLeave={handleMouseLeave}>
+                      onMouseLeave={handleMouseLeave}
+                    >
                       <ul className="submenu">
                         {hoveredMenu.children?.map((subsubcategory) => (
                           <>
                             {console.log(subsubcategory, "ll")}
-                            <li key={subsubcategory.id} className="submenu-item" >
-                              {subsubcategory.children?.map((subsubsubcategory) => (
-
-                                <li key={subsubsubcategory.id} className="submenu-item">
-                                  {subsubsubcategory.categoryTranslations[0].name}
-                                </li>
-                              ))}
-
+                            <li
+                              key={subsubcategory.id}
+                              className="submenu-item"
+                            >
+                              {subsubcategory.children?.map(
+                                (subsubsubcategory) => (
+                                  <li
+                                    key={subsubsubcategory.id}
+                                    className="submenu-item"
+                                  >
+                                    {
+                                      subsubsubcategory.categoryTranslations[0]
+                                        .name
+                                    }
+                                  </li>
+                                )
+                              )}
                             </li>
-
                           </>
-
                         ))}
                       </ul>
                     </div>
@@ -152,10 +165,17 @@ const Categories = () => {
           <div className="widget-info">
             <div className="price_filter">
               <div className="price_slider_amount">
-                
-               Price: {price}
-              <input type="range" onInput={handlePrice} />
-          
+                Your Price: <br></br>${price[0]} ${price[1]}
+                {/* <input type="range" onInput={handlePrice} /> */}
+                <Slider
+                  value={price}
+                  onChange={handleChange}
+                  onChangeCommitted={handlePrice}
+                  valueLabelDisplay="auto"
+                  aria-labelledby="range-slider"
+                  min={0}
+                  max={1000}
+                />
               </div>
               <div id="slider-range"></div>
             </div>
@@ -168,11 +188,14 @@ const Categories = () => {
           </div>
           <div className="widget-info color-filter clearfix">
             <ul>
-              {
-                colors?.map((color) => (
-                  <li key={color.id}><a href="#"><input className="color" type="checkbox" />{color.adminName}</a></li>
-                ))
-              }
+              {colors?.map((color) => (
+                <li key={color.id}>
+                  <a href="#">
+                    <input className="color" type="checkbox" />
+                    {color.adminName}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </aside>
@@ -183,18 +206,19 @@ const Categories = () => {
           </div>
           <div className="widget-info color-filter clearfix">
             <ul>
-              {
-                size?.map((size) => (
-                  <li key={size.id}><a href="#"><input type="checkbox" />{size.adminName}</a></li>
-                ))
-              }
+              {size?.map((size) => (
+                <li key={size.id}>
+                  <a href="#">
+                    <input type="checkbox" />
+                    {size.adminName}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </aside>
       </div>
-
     </Fragment>
-
   );
 };
 

@@ -97,7 +97,7 @@ const Latestproducts = ({ latest }) => {
                                   <div className="single-product">
                                     <div className="product-img">
                                       <NavLink
-                                        to={`/products-details/${latestproduct.id}`}
+                                        to={`/products-details?id=${latestproduct.id}`}
                                       >
                                         <img
                                           src={

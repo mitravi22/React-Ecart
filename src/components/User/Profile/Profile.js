@@ -21,10 +21,10 @@ const Profile = () => {
   const alert = useAlert()
   const dispatch = useDispatch()
 
-  const { user } = useSelector((state) => state.loadUser)
+  const { user } = useSelector((state) => state.loadUser);
   const { error, loading, isUpdated } = useSelector((state) => state.profileUpdate)
 
-  const [firstName, setFirstName] = useState("");
+  const [firstName, setFirstName] = useState(user&&user.firstName?user.firstName:'');
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [mobileNumber, setMobileNo] = useState("");
@@ -100,7 +100,9 @@ const Profile = () => {
       const token = localStorage.getItem("userDetails");
       const dataToken = JSON.parse(token)
 
-      dispatch(updateUserProfile( dataToken.token, ( firstName, lastName, email, mobileNumber)));
+      dispatch(updateUserProfile( dataToken.token, { firstName, lastName, email, mobileNumber}))
+
+      // navigate("/my-account")
     }
 
   }
@@ -109,8 +111,10 @@ const Profile = () => {
     validateUser()
     const token = localStorage.getItem("userDetails");
     const dataToken = JSON.parse(token)
-
     dispatch(loadUserDetails(dataToken.token))
+
+  }, [])
+  useEffect(() => {
 
     if (user) {
       setFirstName(user.firstName);
@@ -138,7 +142,7 @@ const Profile = () => {
         type: UPDATE_PROFILE_RESET
       })
     }
-  }, [])
+  }, [user,isUpdated])
 
   function validateUser(){
     let userDetails = localStorage.getItem('userDetails');

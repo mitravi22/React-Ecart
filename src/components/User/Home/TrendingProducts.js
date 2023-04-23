@@ -42,7 +42,7 @@ const TrendingProducts = ({ trending }) => {
                         <div className="single-product">
                           <div className="product-img">
                             <span className="pro-label sale-label">sale</span>
-                            <NavLink to={`/products-details/${trend.id}`}>
+                            <NavLink to={`/products-details?id=${trend.id}`}>
                               <img src={trend.ProductImages[0].path} alt={trend.ProductFlat.name} />
                             </NavLink>
                           </div>

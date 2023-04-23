@@ -41,7 +41,7 @@ const FeaturedProduct = ({ featureProduct }) => {
                     <div className="single-product">
                       <div className="product-img">
                         <span className="pro-label sale-label">sale</span>
-                        <NavLink to={`/products-details/${featured.id}`}>
+                        <NavLink to={`/products-details?id=${featured.id}`}>
                           <img src={featured.path} alt={featured.name} />
                         </NavLink>
                       </div>

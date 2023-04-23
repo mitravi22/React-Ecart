@@ -15,7 +15,7 @@ const MyProfile = () => {
   const {user}  = useSelector((state) => state.loadUser)
 
   useEffect(() => {
-    validateUser()
+    // validateUser()
 
       const token = localStorage.getItem("userDetails");
       const dataToken = JSON.parse(token)
@@ -23,16 +23,16 @@ const MyProfile = () => {
       dispatch(loadUserDetails(dataToken.token));
 }, [])
 
-function validateUser(){
-  let userDetails = localStorage.getItem('userDetails');
-    if(userDetails){
-    userDetails = JSON.parse(userDetails);
-    dispatch({
-        type:LOGIN_SUCCESS,
-        payload:userDetails
-    })
-    }
-}; 
+// function validateUser(){
+//   let userDetails = localStorage.getItem('userDetails');
+//     if(userDetails){
+//     userDetails = JSON.parse(userDetails);
+//     dispatch({
+//         type:LOGIN_SUCCESS,
+//         payload:userDetails
+//     })
+//     }
+// }; 
 
   return (
     <div >

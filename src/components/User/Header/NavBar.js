@@ -2,8 +2,12 @@ import React from 'react'
 import { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 const NavBar = () => {
+
+  const { isAuthenticated, userLogin} = useSelector((state) => state.userLogin);
+
   return (
     <Fragment>
       <header id="sticky-menu" className="header header-2">
@@ -28,7 +32,8 @@ const NavBar = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-sm-3 col-xs-4">
+              
+              {isAuthenticated === true ?  <div className="col-sm-3 col-xs-4">
                 <div className="mini-cart text-right">
                   <ul>
                     <li>
@@ -98,6 +103,8 @@ const NavBar = () => {
                   </ul>
                 </div>
               </div>
+               : "" }
+             
             </div>
           </div>
         </div>

@@ -142,15 +142,35 @@ export const getSize = () => async (dispatch) => {
 
 // Get all Products
 
-export const getAllProduct = (page = 1, pageSize = 10, price = [0, 25000], catId, size, color) => async (dispatch) => {
+export const getAllProduct = (config) => async (dispatch) => {
 
     try {
-
+        console.log(config,"fig");
         dispatch({
             type: ALL_PRODUCTS_REQUEST
         })
+        let queryStr = `page=${config.page}&pageSize=${config.pageSize}&filter=${true}`;
+        if(config.search && config.search!=""){
+            queryStr = queryStr +`&`+ `search=${config.search}`
+        }
 
-        let link = `/api/user-product/get-all-products?page=${page}&pageSize=${pageSize}&filter=${true}}`;
+        if(config.catId && config.catId!=""){
+            queryStr = queryStr +`&`+ `catId=${config.catId}`
+        }
+
+        if(config.color && config.color!=""){
+            queryStr = queryStr +`&`+ `color=${config.color}`
+        }
+
+        if(config.size && config.size!=""){
+            queryStr = queryStr +`&`+ `size=${config.size}`
+        }
+
+        if(config.price && config.price!=""){
+            queryStr = queryStr +`&`+ `price=${config.price}`
+        }
+
+        let link = `/api/user-product/get-all-products?${queryStr}`;
 
         const { data } = await axios.get(link);
 

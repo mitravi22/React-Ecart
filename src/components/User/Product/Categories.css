@@ -55,3 +55,33 @@
     display: flex;
     justify-content: center;
   }
+
+  .tree-control_wrapper {
+    max-width: 500px;
+    margin: auto;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+}
+
+.tree-view {
+  margin: 1em;
+}
+
+.tree-view > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.tree-view label {
+  margin-left: 1em;
+}
+
+.tree-view .chevron {
+  margin-right: 0.5em;
+  cursor: pointer;
+}
+
+.tree-view .children {
+  margin-left: 1em;
+}

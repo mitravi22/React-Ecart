@@ -21,7 +21,7 @@ const Home = () => {
     const { trending } = useSelector((state) => state.trending)
 
     useEffect(() => {
-        validateUser()
+        // validateUser()
         
         if (error) {
             alert.error(error)
@@ -35,16 +35,16 @@ const Home = () => {
     
     }, [dispatch, error, alert])
 
-   function validateUser(){
-        let userDetails = localStorage.getItem('userDetails');
-        if(userDetails){
-        userDetails = JSON.parse(userDetails);
-        dispatch({
-            type:LOGIN_SUCCESS,
-            payload:userDetails
-        })
-        }
-    }; 
+//    function validateUser(){
+//         let userDetails = localStorage.getItem('userDetails');
+//         if(userDetails){
+//         userDetails = JSON.parse(userDetails);
+//         dispatch({
+//             type:LOGIN_SUCCESS,
+//             payload:userDetails
+//         })
+//         }
+//     }; 
     return (
         <Fragment>
             {loading ? <Loader /> : <Fragment>

@@ -18,16 +18,18 @@ export const updateUserProfile = (token,userData) => async(dispatch) => {
             type:  UPDATE_PROFILE_REQUEST
         })
 
-        const {data} =  await axios.put('/api/user-auth/user', {
+        const {data} =  await axios.put('/api/user-auth/user', userData, {
             headers: {
                 Authorization: `Bearer ${token}`,
               },
-        }, {userData})
+        })
 
         dispatch({
             type: UPDATE_PROFILE_SUCCESS,
             payload: data
         })
+
+        return data
         
     } catch (error) {
 

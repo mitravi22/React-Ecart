@@ -9,13 +9,16 @@ import { useAlert } from "react-alert";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { LOGIN_SUCCESS } from '../../../constant/AuthConstant';
+import { useLocation } from 'react-router-dom';
 
 
 const ProductDetails = () => {
 
   const alert = useAlert()
   const dispatch = useDispatch();
-  const params = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const id = searchParams.get('id');
 
   const { isAuthenticated } = useSelector((state) => state.userLogin);
 
@@ -43,24 +46,24 @@ const ProductDetails = () => {
   };
 
   useEffect(() => {
-    validateUser()
+   // validateUser()
     if (error) {
       alert.error(error)
       dispatch(clearErrors())
     }
-    dispatch(productDetails(params.id))
-  }, [dispatch, params.id, error, alert, isAuthenticated])
+    dispatch(productDetails(id))
+  }, [dispatch,id, error, alert, isAuthenticated])
 
-  function validateUser() {
-    let userDetails = localStorage.getItem('userDetails');
-    if (userDetails) {
-      userDetails = JSON.parse(userDetails);
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: userDetails
-      })
-    }
-  };
+  // function validateUser() {
+  //   let userDetails = localStorage.getItem('userDetails');
+  //   if (userDetails) {
+  //     userDetails = JSON.parse(userDetails);
+  //     dispatch({
+  //       type: LOGIN_SUCCESS,
+  //       payload: userDetails
+  //     })
+  //   }
+  // };
   return (
     <Fragment>
       {loading ? <Lodder /> : (<Fragment>
@@ -106,7 +109,8 @@ const ProductDetails = () => {
             </div>
 
             <div className='detailsBlock-4'>
-              Description : {product.ProductFlat?.description}
+              Description : <span dangerouslySetInnerHTML={{ __html: product.ProductFlat?.description }}></span> 
+              {/* {product.ProductFlat?.description} */}
             </div>
 
           </div>
