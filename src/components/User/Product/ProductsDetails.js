@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import "./ProductDetails.css"
 import { productDetails, clearErrors } from "../../../action/ProductAction"
@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { LOGIN_SUCCESS } from '../../../constant/AuthConstant';
 import { useLocation } from 'react-router-dom';
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 
 const ProductDetails = () => {
@@ -24,10 +25,28 @@ const ProductDetails = () => {
 
   const { product, loading, error } = useSelector((state) => state.product)
 
+  const [quantity, setQuantity] = useState(1)
+
+  const handleIncrement = () => {
+    if (quantity < 5) {
+      setQuantity(quantity + 1)
+    }
+  }
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1)
+    }
+  }
+
+  let handleChange = (e)=>{
+    setQuantity(e.target.value);
+   }
+
   const handleClick = () => {
-    if(isAuthenticated === true){
+    if (isAuthenticated === true) {
       toast.success('Product add successfully');
-    }else{
+    } else {
       toast.error('You want to login ');
     }
   };
@@ -46,13 +65,13 @@ const ProductDetails = () => {
   };
 
   useEffect(() => {
-   // validateUser()
+    // validateUser()
     if (error) {
       alert.error(error)
       dispatch(clearErrors())
     }
     dispatch(productDetails(id))
-  }, [dispatch,id, error, alert, isAuthenticated])
+  }, [dispatch, id, error, alert, isAuthenticated])
 
   // function validateUser() {
   //   let userDetails = localStorage.getItem('userDetails');
@@ -81,7 +100,6 @@ const ProductDetails = () => {
           <div>
             <div className='detailsBlock-1'>
               <h2>{product.ProductFlat?.name}</h2>
-              <p>Product # {product.ProductFlat?._id}</p>
             </div>
             <div className='detailsBlock-2'>
               <ReactStars {...options} />
@@ -91,9 +109,14 @@ const ProductDetails = () => {
               <h1>{`₹ ${product.ProductFlat?.price}`}</h1>
               <div className='detailsBlock-3-1'>
                 <div className='detailsBlock-3-1-1'>
-                  <button> - </button>
+
+                  {/* <button> - </button>
                   <input value="1" type="number" />
-                  <button> + </button>
+                  <button> + </button> */}
+
+                  <button onClick={handleDecrement} ><FaMinus /></button>
+                   <span className='quantity' onChange={handleChange}>{quantity}</span>
+                  <button  onClick={handleIncrement}><FaPlus /></button>
                 </div>
                 <div className='butn'>
                   <button onClick={handleClick}>Add to Cart</button>
@@ -109,7 +132,7 @@ const ProductDetails = () => {
             </div>
 
             <div className='detailsBlock-4'>
-              Description : <span dangerouslySetInnerHTML={{ __html: product.ProductFlat?.description }}></span> 
+              Description : <span dangerouslySetInnerHTML={{ __html: product.ProductFlat?.description }}></span>
               {/* {product.ProductFlat?.description} */}
             </div>
 

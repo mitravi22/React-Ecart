@@ -6,23 +6,26 @@ import { getAllProduct, clearErrors } from "../../../action/ProductAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import Lodder from "../layout/Loader";
+import Dropdow from "./Dropdown"
+import Pagination from "react-js-pagination";
 
 const Product = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
-  const { allproduct, error } = useSelector((state) => state.allProduct);
+  const { allproduct, pageCount, error } = useSelector((state) => state.allProduct);
   let config = {
-    page:1,
-    pageSize:10,
+    page: 1,
+    pageSize: 10,
     price: null,
-    search:"",
-    catId:null,
+    search: "",
+    catId: null,
     color: null,
-    size: null
+    size: null,
+    filter: null
   }
 
-  console.log(allproduct,"jjjj")
+  // console.log(pageCount, "jjjj")
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -30,25 +33,91 @@ const Product = () => {
     item.ProductFlat.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  console.log(filteredData, "all");
+   console.log(filteredData, "all");
 
-  const handleSearch = (e)=>{  
+  const [currentPage, setCurrentPage] = useState(config.page);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectSize, setSize] = useState([])
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  let setFilter = true
+
+  const handleSearch = (e) => {
+    config.filter = setFilter
+
     setSearchQuery(e.target.value)
     config.search = e.target.value;
+
     dispatch(getAllProduct(config));
   }
 
-  const handlePrice =(event,priceValue) => {
+  const handlePrice = (event, priceValue) => {
+    config.filter = setFilter
+
     let priceStr = `${priceValue[0]},${priceValue[1]}`;
+    console.log(priceStr, "prii")
     config.price = priceStr;
+
     dispatch(getAllProduct(config));
   }
+
+  const handleColor = (event) => {
+    config.filter = setFilter
+
+    const value = event.target.value;
+    if (event.target.checked) {
+      setSelectedColors([...selectedColors, value]);
+    } else {
+      setSelectedColors(selectedColors.filter((color) => color !== value));
+    }
+    let colorStr = `${encodeURIComponent(value)}`
+    // console.log(colorStr,"hhjhj");
+    config.color = colorStr
+
+    dispatch(getAllProduct(config))
+  }
+
+  const handleSize = (event) => {
+    config.filter = setFilter
+
+    const value = event.target.value
+    if (event.target.checked) {
+      setSize([...selectSize, value]);
+    } else {
+      setSize(selectSize.filter((size) => size !== value));
+    }
+    let sizeStr = `${value},`
+    config.size = sizeStr
+
+    dispatch(getAllProduct(config))
+  }
+
+  const handleCategories = (id, isChecked) => {
+    config.filter = setFilter
+
+    if (isChecked) {
+      setSelectedIds([...selectedIds, id]);
+      // console.log(selectedIds,"oooo");
+    } else {
+      setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
+      // console.log(selectedIds,"pp");
+    }
+
+    let categoryStr = `${id},`
+    console.log(categoryStr, "gg");
+    config.catId = categoryStr
+
+    dispatch(getAllProduct(config))
+  };
+
+  const setCurrentPageNo = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     if (error) {
       dispatch(clearErrors());
     }
-    console.log("calll");
     dispatch(getAllProduct(config));
   }, []);
 
@@ -77,25 +146,28 @@ const Product = () => {
           </div>
         </div>
 
+        {/* For Search  */}
+
         <div className="product-area pt-80 pb-80 product-style-2">
           <div className="container">
             <div className="row">
+
               <div className="col-md-3 col-sm-12 col-xs-12">
                 <aside className="widget widget-search mb-30">
-               
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => handleSearch(e)}
-                      placeholder="Search here..."
-                    />
-                    {/* <button type="submit">
-                      <i className="zmdi zmdi-search"></i>
-                    </button> */}
-            
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => handleSearch(e)}
+                    placeholder="Search here..."
+                  />
                 </aside>
 
-                <Categories handlePrice={handlePrice}/>
+                <Dropdow handleCategories={handleCategories} />
+                <Categories
+                  handlePrice={handlePrice}
+                  handleColor={handleColor}
+                  handleSize={handleSize}
+                />
               </div>
 
               <div className="col-md-9 col-sm-12 col-xs-12">
@@ -113,19 +185,14 @@ const Product = () => {
                         </a>
                       </li>
                     </ul>
-                    {/* <div className="showing text-right hidden-xs">
-                      <p className="mb-0">Showing 01-09 of 17 Results</p>
-                    </div> */}
+                    <div className="showing text-right hidden-xs">
+                      <p className="mb-0">Showing {config.page}-{config.pageSize-1} of {pageCount} Results</p>
+                    </div>
                   </div>
 
-              
+                  {/* Grid and List View */}
 
                   <div className="tab-content">
-{/* 
-
-                  {filteredData?.map((item) => (
-                        <li key={item.id}>{item.name}</li>
-                      ))} */}
 
                     <div className="tab-pane active" id="grid-view">
                       <div className="row">
@@ -229,13 +296,9 @@ const Product = () => {
                     </div>
                   </div>
 
+                  {/* Pagination */}
 
-
-
-
-
-
-                  <div className="shop-pagination  text-center">
+                  {/* <div className="shop-pagination  text-center">
                     <div className="pagination">
                       <ul>
                         <li>
@@ -265,7 +328,34 @@ const Product = () => {
                         </li>
                       </ul>
                     </div>
+                  </div> */}
+
+
+
+                  <div className="shop-pagination  text-center">
+                    <div className="pagination">
+
+                      <Pagination
+                        activePage={currentPage}
+                        itemsCountPerPage={config.pageSize}
+                        totalItemsCount={pageCount}
+                        onChange={setCurrentPageNo}
+                        nextPageText="Next"
+                        prevPageText="Prev"
+                        firstPageText="First"
+                        lastPageText="Last"
+                        itemClass="page-item"
+                        linkClass="page-link"
+                        activeLinkClass="pageLinkActive"
+                      />
+
+                    </div>
                   </div>
+
+
+
+
+
                 </div>
               </div>
             </div>

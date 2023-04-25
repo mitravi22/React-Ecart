@@ -149,7 +149,12 @@ export const getAllProduct = (config) => async (dispatch) => {
         dispatch({
             type: ALL_PRODUCTS_REQUEST
         })
-        let queryStr = `page=${config.page}&pageSize=${config.pageSize}&filter=${true}`;
+        let queryStr = `page=${config.page}&pageSize=${config.pageSize}`;
+
+        if(config.filter && config.filter!=""){
+            queryStr = queryStr +`&`+ `filter=${config.filter}`
+        }
+
         if(config.search && config.search!=""){
             queryStr = queryStr +`&`+ `search=${config.search}`
         }

@@ -131,8 +131,8 @@ export const getAllProductReducer = (state = { allproduct: [] }, action) => {
             return {
 
                 loading: false,
-                allproduct: action.payload.result.data.rows,
-                // filteredProductsCount: action.payload.filteredProductsCount
+                 allproduct: action.payload.result.data.rows,
+                 pageCount: action.payload.result.data.count
             }
 
         case ALL_PRODUCTS_FAIL:

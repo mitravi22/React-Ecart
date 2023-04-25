@@ -14,7 +14,7 @@ import ForgetPassword from './components/User/Auth/ForgetPassword';
 import ResetPassword from './components/User/Auth/ResetPassword';
 import NotFound from './components/User/layout/NotFound';
 import { ToastContainer } from 'react-toastify';
-import ProtectedRoute from './components/User/layout/ProtectedRoute';
+import ProtectedRoute from "./components/User/layout/ProtectedRoute"
 import MyAddress from './components/User/Profile/MyAddress';
 import MyProfile from './components/User/Profile/MyProfile';
 import MyOrder from './components/User/Profile/MyOrder';
@@ -43,6 +43,8 @@ function App() {
         }
     }; 
 
+    const isAuthenticated = true;
+
     return (
         <Router>
             <Header />
@@ -56,7 +58,6 @@ function App() {
                 <Route exact path='/registration' element={<Registration />} />
                 <Route exact path='/login' element={<Login />} />
                 <Route exact path='/forgot-password' element={<ForgetPassword />} />
-                <Route exact path='/drop' element={<Dropdow />} />
                 {/* <ProtectedRoute exact path="/profile" element={<Profile />} /> */}
                 <Route exact path='/profile' element={<Profile />} />
                 <Route exact path='/my-account' element={<MyProfile />} />
