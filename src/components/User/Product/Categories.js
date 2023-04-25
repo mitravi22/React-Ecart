@@ -156,8 +156,6 @@ const Categories = ({ handlePrice, handleColor, handleSize}) => {
           </div>
         </aside> */}
 
-        {/* <Dropdow /> */}
-
         <aside className="widget shop-filter mb-30">
           <div className="widget-title">
             <h4>Price</h4>
