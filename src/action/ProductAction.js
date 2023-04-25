@@ -174,6 +174,7 @@ export const getAllProduct = (config) => async (dispatch) => {
         if(config.price && config.price!=""){
             queryStr = queryStr +`&`+ `price=${config.price}`
         }
+        console.log(queryStr,"stttttt");
 
         let link = `/api/user-product/get-all-products?${queryStr}`;
 
