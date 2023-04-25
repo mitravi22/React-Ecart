@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { LOGIN_SUCCESS } from '../../../constant/AuthConstant';
 import { useLocation } from 'react-router-dom';
 import { FaMinus, FaPlus } from "react-icons/fa";
-
+import { addItemsToCart } from "../../../action/CartAction"
 
 const ProductDetails = () => {
 
@@ -24,6 +24,8 @@ const ProductDetails = () => {
   const { isAuthenticated } = useSelector((state) => state.userLogin);
 
   const { product, loading, error } = useSelector((state) => state.product)
+
+  //console.log(product.ProductFlat?.productId,"ppp")
 
   const [quantity, setQuantity] = useState(1)
 
@@ -39,19 +41,21 @@ const ProductDetails = () => {
     }
   }
 
-  let handleChange = (e)=>{
+  let handleChange = (e) => {
     setQuantity(e.target.value);
-   }
+  }
 
   const handleClick = () => {
-    if (isAuthenticated === true) {
-      toast.success('Product add successfully');
-    } else {
       toast.error('You want to login ');
-    }
   };
 
-  // console.log(product.ProductFlat?.name,"pro")
+  const token = localStorage.getItem("userDetails");
+  const dataToken = JSON.parse(token)
+
+  const addToCartHandler = () => {
+    dispatch(addItemsToCart(dataToken.token, dataToken.user.id, product.ProductFlat?.productId, quantity,));
+    alert.success("Item Added To Cart");
+  };
 
   const options = {
     edit: false,
@@ -115,12 +119,23 @@ const ProductDetails = () => {
                   <button> + </button> */}
 
                   <button onClick={handleDecrement} ><FaMinus /></button>
-                   <span className='quantity' onChange={handleChange}>{quantity}</span>
-                  <button  onClick={handleIncrement}><FaPlus /></button>
+                  <span className='quantity' onChange={handleChange}>{quantity}</span>
+                  <button onClick={handleIncrement}><FaPlus /></button>
                 </div>
-                <div className='butn'>
-                  <button onClick={handleClick}>Add to Cart</button>
-                </div>
+                {
+                  isAuthenticated === true
+                    ? <div className='butn'>
+                      <button
+                        onClick={addToCartHandler}
+                      >Add to Cart</button>
+                    </div>
+                    : <div className='butn'>
+                    <button
+                      onClick={handleClick}
+                    >Add to Cart</button>
+                  </div>
+                }
+
               </div>
               <p>
                 Status:

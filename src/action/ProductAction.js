@@ -145,7 +145,7 @@ export const getSize = () => async (dispatch) => {
 export const getAllProduct = (config) => async (dispatch) => {
 
     try {
-        console.log(config,"fig");
+        // console.log(config,"fig");
         dispatch({
             type: ALL_PRODUCTS_REQUEST
         })
@@ -174,7 +174,6 @@ export const getAllProduct = (config) => async (dispatch) => {
         if(config.price && config.price!=""){
             queryStr = queryStr +`&`+ `price=${config.price}`
         }
-        console.log(queryStr,"stttttt");
 
         let link = `/api/user-product/get-all-products?${queryStr}`;
 
