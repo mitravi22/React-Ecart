@@ -12,7 +12,7 @@ import {
 } from "./reducer/AuthReducer"
 import {contactUsReducer} from "./reducer/ContactUsReducer"
 import { updateProfileReducer} from "./reducer/ProfileReducer"
-import {productDetailReducer, filtersReducer, getAllProductReducer} from "./reducer/ProductsRecucer"
+import {productDetailReducer, filtersReducer, getAllProductReducer, getParentProductReducer} from "./reducer/ProductsRecucer"
  
 const reducer = combineReducers({
     banners: bannerReducer,
@@ -28,7 +28,8 @@ const reducer = combineReducers({
     profileUpdate: updateProfileReducer,
     product: productDetailReducer,
     filters: filtersReducer,
-    allProduct: getAllProductReducer
+    allProduct: getAllProductReducer,
+    allCategory:getParentProductReducer
 })
 
 const initialState = {};

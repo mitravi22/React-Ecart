@@ -20,7 +20,8 @@ import {
     ALL_PRODUCTS_SUCCESS,
     ALL_PRODUCTS_FAIL,
 
-    CLEAR_ERROR
+    CLEAR_ERROR,
+    ALL_CATEGORY_SUCCESS
 
 } from "../constant/ProductsConstant"
 
@@ -148,6 +149,19 @@ export const getAllProductReducer = (state = { allproduct: [] }, action) => {
                 error: null
             }
 
+        default:
+            return state;
+    }
+}
+
+
+export const getParentProductReducer = (state = { allCategories: [] }, action) => {
+    switch (action.type) {       
+        case ALL_CATEGORY_SUCCESS:
+            return {
+                loading: false,
+                allCategories: action.data,
+            }
         default:
             return state;
     }
