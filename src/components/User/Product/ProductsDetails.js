@@ -54,7 +54,7 @@ const ProductDetails = () => {
   const dataToken = JSON.parse(token)
 
   const addToCartHandler = () => {
-    dispatch(addItemsToCart(dataToken.token, dataToken.user.id, product.ProductFlat?.productId, quantity,));
+    dispatch(addItemsToCart(dataToken.token, dataToken.user.id, id , quantity,));
     dispatch(getCartItems(dataToken.token, dataToken.user.id))
     alert.success("Item Added To Cart");
   };

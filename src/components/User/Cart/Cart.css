@@ -31,6 +31,15 @@
     font-size: 1.125em;
     font-weight: 400;
   }
+  .title button {
+    float: right;
+    border: 1px solid;
+  }
+
+  .title button:hover {
+    color: red
+  }
+
   .item-section{
     padding: 1.25em 1.75em;
     height: 7.5em;
@@ -82,9 +91,11 @@
   }
   
   .image-section{
-    width: 500px;
-    height: 300px;
+    width: 120px;
+    height: auto;
     position: relative;
+    overflow: hidden;
+    margin-right: 50px;
   }
   .description{
     padding-top: 10px;
@@ -114,7 +125,7 @@
     -webkit-appearance: none;
     border: none;
     text-align: center;
-    width: 32px;
+    width: 40px;
     font-size: 1em;
     color: #43484D;
     font-weight: 300;
@@ -141,7 +152,7 @@
   
   .total-price{
     width: 83px;
-    padding-top: 27px;
+   border: none;
     text-align: center;
     font-size: 1em;
     color: #43484D;
