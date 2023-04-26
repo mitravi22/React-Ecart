@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const NavBar = () => {
 
-  const { isAuthenticated, userLogin} = useSelector((state) => state.userLogin);
+  const { isAuthenticated, userLogin } = useSelector((state) => state.userLogin);
+  const {cartItems} = useSelector((state) => state.cart)
+  // console.log(cartItems[0].length,"ff");
 
   return (
     <Fragment>
@@ -32,15 +34,15 @@ const NavBar = () => {
                   </div>
                 </div>
               </div>
-              
-              {isAuthenticated === true ?  <div className="col-sm-3 col-xs-4">
+
+              {isAuthenticated === true ? <div className="col-sm-3 col-xs-4">
                 <div className="mini-cart text-right">
                   <ul>
                     <li>
-                      <a className="cart-icon" href="#">
+                      <Link className="cart-icon" to='/cart' >
                         <i className="zmdi zmdi-shopping-cart"></i>
-                        <span>3</span>
-                      </a>
+                        {/* <span>{cartItems[0].length === null ? "" : cartItems[0].length  }</span> */}
+                      </Link>
                       <div className="mini-cart-brief text-left">
                         <div className="cart-items">
                           <p className="mb-0">
@@ -85,26 +87,24 @@ const NavBar = () => {
                           </h5>
                         </div>
                         <div className="cart-bottom clearfix">
-                          <a
-                            href="#"
+                          <Link
+                            to='/cart'
                             className="button-one floatleft text-uppercase"
                             data-text="View cart"
-                          >View cart</a
-                          >
-                          <a
-                            href="#"
+                          >View cart</Link>
+                          <Link
+                            to='/checkout'
                             className="button-one floatright text-uppercase"
                             data-text="Check out"
-                          >Check out</a
-                          >
+                          >Check out</Link>
                         </div>
                       </div>
                     </li>
                   </ul>
                 </div>
               </div>
-               : "" }
-             
+                : ""}
+
             </div>
           </div>
         </div>

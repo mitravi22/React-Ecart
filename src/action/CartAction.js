@@ -3,14 +3,15 @@ import axios from "axios";
 import {
     ADD_TO_CART,
     REMOVE_CART_ITEM ,
+    GET_TO_CART_ITEMS,
     SAVE_SHIPPING_INFO
 } from "../constant/CartConstant"
 
 // Add to Crat
 
-export const addItemsToCart = (token,customerId, productId,quantity) => async (dispatch, getState) => {
+export const addItemsToCart = (token,customerId, productId,quantity) => async (dispatch) => {
 
-    const { data } = await axios.post('/api/user-cart/create', {customerId, productId},{
+    const { data } = await axios.post('/api/user-cart/create', {customerId, productId, quantity},{
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -18,14 +19,26 @@ export const addItemsToCart = (token,customerId, productId,quantity) => async (d
 
     dispatch({
         type: ADD_TO_CART,
-        payload: {
-            product: data.product._id,
-            name: data.product.name,
-            price: data.product.price,
-            image: data.product.images[0].url,
-            stock: data.product.Stock,
-            quantity,
-        },
+        payload: data
+    })
+
+}
+
+// Get Cart
+
+export const getCartItems = (token,customerId) => async (dispatch,getState) => {
+
+    const {data} = await axios.get(`/api/user-cart/items/customer/${customerId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }, 
+    })
+
+    console.log(data,"cart")
+
+    dispatch({
+        type: GET_TO_CART_ITEMS,
+        payload: data.result.data.CartItems
     })
 
     localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))

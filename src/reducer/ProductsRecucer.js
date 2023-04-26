@@ -132,8 +132,8 @@ export const getAllProductReducer = (state = { allproduct: [] }, action) => {
             return {
 
                 loading: false,
-                 allproduct: action.payload.result.data.rows,
-                 pageCount: action.payload.result.data.count
+                allproduct: action.payload.result.data.rows,
+                pageCount: action.payload.result.data.count
             }
 
         case ALL_PRODUCTS_FAIL:
@@ -154,9 +154,8 @@ export const getAllProductReducer = (state = { allproduct: [] }, action) => {
     }
 }
 
-
 export const getParentProductReducer = (state = { allCategories: [] }, action) => {
-    switch (action.type) {       
+    switch (action.type) {
         case ALL_CATEGORY_SUCCESS:
             return {
                 loading: false,

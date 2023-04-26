@@ -20,6 +20,7 @@ const Header = () => {
 
   const handelLogOut = () => {
     localStorage.removeItem('userDetails')
+    localStorage.removeItem('cartItems')
     dispatch({
       type: LOGOUT_USER_SUCCESS,
     })

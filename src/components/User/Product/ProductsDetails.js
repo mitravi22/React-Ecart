@@ -12,6 +12,7 @@ import { LOGIN_SUCCESS } from '../../../constant/AuthConstant';
 import { useLocation } from 'react-router-dom';
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { addItemsToCart } from "../../../action/CartAction"
+import { getCartItems } from "../../../action/CartAction"
 
 const ProductDetails = () => {
 
@@ -25,7 +26,7 @@ const ProductDetails = () => {
 
   const { product, loading, error } = useSelector((state) => state.product)
 
-  //console.log(product.ProductFlat?.productId,"ppp")
+  // console.log(product, "ppp")
 
   const [quantity, setQuantity] = useState(1)
 
@@ -46,7 +47,7 @@ const ProductDetails = () => {
   }
 
   const handleClick = () => {
-      toast.error('You want to login ');
+    toast.error('You want to login ');
   };
 
   const token = localStorage.getItem("userDetails");
@@ -54,6 +55,7 @@ const ProductDetails = () => {
 
   const addToCartHandler = () => {
     dispatch(addItemsToCart(dataToken.token, dataToken.user.id, product.ProductFlat?.productId, quantity,));
+    dispatch(getCartItems(dataToken.token, dataToken.user.id))
     alert.success("Item Added To Cart");
   };
 
@@ -110,37 +112,39 @@ const ProductDetails = () => {
               <span>(4 Reviews)</span>
             </div>
             <div className='detailsBlock-3'>
-              <h1>{`₹ ${product.ProductFlat?.price}`}</h1>
-              <div className='detailsBlock-3-1'>
-                <div className='detailsBlock-3-1-1'>
 
-                  {/* <button> - </button>
-                  <input value="1" type="number" />
-                  <button> + </button> */}
-
-                  <button onClick={handleDecrement} ><FaMinus /></button>
-                  <span className='quantity' onChange={handleChange}>{quantity}</span>
-                  <button onClick={handleIncrement}><FaPlus /></button>
-                </div>
-                {
-                  isAuthenticated === true
-                    ? <div className='butn'>
-                      <button
-                        onClick={addToCartHandler}
-                      >Add to Cart</button>
+              {
+                product.ProductInventory?.qty < 1
+                  ? ""
+                  : <>
+                    <h1>{`₹ ${product.ProductFlat?.price}`}</h1>
+                    <div className='detailsBlock-3-1'>
+                      <div className='detailsBlock-3-1-1'>
+                        <button onClick={handleDecrement} ><FaMinus /></button>
+                        <span className='quantity' onChange={handleChange}>{quantity}</span>
+                        <button onClick={handleIncrement}><FaPlus /></button>
+                      </div>
+                      {
+                        isAuthenticated === true
+                          ? <div className='butn'>
+                            <button
+                              onClick={addToCartHandler}
+                            >Add to Cart</button>
+                          </div>
+                          : <div className='butn'>
+                            <button
+                              onClick={handleClick}
+                            >Add to Cart</button>
+                          </div>
+                      }
                     </div>
-                    : <div className='butn'>
-                    <button
-                      onClick={handleClick}
-                    >Add to Cart</button>
-                  </div>
-                }
+                  </>
+              }
 
-              </div>
               <p>
                 Status:
-                <b className={product.stock < 1 ? "redColor" : "greenColor"}>
-                  {product.stock < 1 ? "OutOfStock" : "InStock"}
+                <b className={product.ProductInventory?.qty < 1 ? "redColor" : "greenColor"}>
+                  {product.ProductInventory?.qty < 1 ? "OutOfStock" : "InStock"}
                 </b>
               </p>
 

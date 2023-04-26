@@ -22,7 +22,7 @@ import Profile from './components/User/Profile/Profile';
 import Product from './components/User/Product/Product';
 import { useSelector, useDispatch } from "react-redux";
 import { LOGIN_SUCCESS } from './constant/AuthConstant';
-import Dropdow from './components/User/Product/Dropdown';
+import Cart from './components/User/Cart/Cart';
 
 function App() {
 
@@ -64,6 +64,7 @@ function App() {
                 <Route exact path='/my-address' element={<MyAddress />} />
                 <Route exact path='/my-oreders' element={<MyOrder />} /> 
                 <Route exact path='/reset-password' element={<ResetPassword />} />
+                <Route exact path='/cart' element={<Cart />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />

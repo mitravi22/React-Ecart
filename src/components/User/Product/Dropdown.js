@@ -1,4 +1,3 @@
-
 import React, { Fragment, useCallback, useEffect, useState } from "react";
 
 import "./Categories.css";
@@ -27,7 +26,7 @@ const Dropdow = ({handleCategories}) => {
   const { allCategories } = useSelector((state) => state.allCategory);
 
   function getCategoriesByParentId(allCategories, parentId) {
-    console.log("parent");
+    // console.log("parent");
     const filteredCategories = allCategories?.filter(
       (category) => category.parentId === parentId
     );
@@ -42,9 +41,8 @@ const Dropdow = ({handleCategories}) => {
       return category;
     });
   }
-  
 
-   console.log(parentCategories,"jj");
+  //  console.log(parentCategories,"jj");
 
   useEffect(() => {
     if (error) {
@@ -128,7 +126,3 @@ const Dropdow = ({handleCategories}) => {
 }
 
 export default Dropdow
-
-
-
-
