@@ -43,15 +43,15 @@ export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action)
             }
 
 
-        // case REMOVE_SINGLE_ITEM:
-        //     console.log(action,"action");
-        //     let getAllCarts = state.cartItems[0];
-        //     let updatedCarts  = getAllCarts.CartItems.filter((item) => item.id !== action.payload);
-        //     state.cartItems[0].CartItems = updatedCarts
-        //     return {
-        //         ...state,
-        //         cartItems: state.cartItems,
-        //     };
+        case REMOVE_SINGLE_ITEM:
+            console.log(action,"action");
+            let getAllCarts = state.cartItems[0];
+            let updatedCarts  = getAllCarts.CartItems.filter((item) => item.id !== action.payload);
+            state.cartItems[0].CartItems = updatedCarts
+            return {
+                ...state,
+                cartItems: state.cartItems,
+            };
 
         case REMOVE_CART:
             return {

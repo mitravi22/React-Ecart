@@ -83,7 +83,7 @@ export const removeQuantity = (token, id) => async (dispatch) => {
 
 // Remove Product from cart
 
-export const removeItemsFromCart = (token, id) => async (dispatch) => {
+export const removeItemsFromCart = (token, id,userId) => async (dispatch) => {
 
     try {
 
@@ -91,7 +91,10 @@ export const removeItemsFromCart = (token, id) => async (dispatch) => {
             headers: {
                 Authorization: `Bearer ${token}`,
             }
-        })        
+        })
+    
+        dispatch(getCartItems(token, userId))
+        
     } catch (error) {
         console.log(error); 
     }

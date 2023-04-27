@@ -44,14 +44,14 @@ const CartItems = ({ items }) => {
     }
 
     const handleRemoveCartItem = (id) => {
-        dispatch(removeItemsFromCart(dataToken.token, id))
-        setRemoveQ(true)
+        dispatch(removeItemsFromCart(dataToken.token, id ,dataToken.user.id))
+        // setRemoveQ(true)
     }
 
 
   useEffect(() => {
     dispatch(getCartItems(dataToken.token, dataToken.user.id))
-  }, [dispatch,removeQ])
+  }, [dispatch])
 
     return (
         <>
