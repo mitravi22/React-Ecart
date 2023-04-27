@@ -3,8 +3,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { NavLink } from "react-router-dom";
 
 const Card = ({products,imageTag})=>{
-
-    console.log(products,"duscss");
    return(<div className="single-product">
     <Fragment>
       <div className="product-img">

@@ -91,13 +91,7 @@ export const removeItemsFromCart = (token, id) => async (dispatch) => {
             headers: {
                 Authorization: `Bearer ${token}`,
             }
-        })
-    
-        dispatch({
-            type: REMOVE_SINGLE_ITEM,
-            payload: data,
-        });
-        
+        })        
     } catch (error) {
         console.log(error); 
     }

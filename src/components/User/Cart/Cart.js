@@ -13,8 +13,7 @@ const Cart = () => {
   const dispatch = useDispatch();
 
   const { cartItems, error } = useSelector((state) => state.cart)
-
-  const cartData = cartItems[0]?.CartItems
+  const cartData =cartItems && cartItems.length>0?cartItems[0]?.CartItems:null
   // console.log(cartData,"lll")
 
   const token = localStorage.getItem("userDetails");
@@ -41,10 +40,10 @@ const Cart = () => {
       <div className="shopping-cart">
         <div className="title">
          Shopping Cart
-         <button onClick={handleRemoveAllproduct} > Remove All </button>
+         {cartData &&<button onClick={handleRemoveAllproduct} > Remove All </button>}
         </div>
         <Fragment>
-          {
+          {cartData &&
             cartData && cartData.map((items) => (
 
               <div  key={items.id}>
@@ -69,9 +68,10 @@ const Cart = () => {
 
             ))
           }
+          
         </Fragment>
 
-        <div className="col-md-6 col-sm-6 col-xs-12">
+        {cartData&&<div className="col-md-6 col-sm-6 col-xs-12">
           <div className="customer-login payment-details mt-30">
             <h4 className="title-1 title-border text-uppercase">payment details</h4>
             <table>
@@ -92,7 +92,9 @@ const Cart = () => {
             </table>
             <button type="submit" data-text="apply coupon" className="button-one submit-button mt-15">PROCEED TO CHECKOUT</button>
           </div>
-        </div>
+        </div>}
+
+        {!cartData && (<h1>Cart is Empty</h1>)}
       </div>
     </Fragment >
   )

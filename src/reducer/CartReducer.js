@@ -23,20 +23,18 @@ export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action)
 
             const item = action.payload
 
-            const isItemExist = state.cartItems.find((i) => i.product === item.product);
-            if (isItemExist) {
+            // const isItemExist = state.cartItems.find((i) => i.product === item.product);
+            // if (isItemExist) {
                 return {
                     ...state,
-                    cartItems: state.cartItems.map((i) =>
-                        i.product === isItemExist.product ? item : i
-                    )
+                    cartItems: action.payload?[action.payload]:[]
                 };
-            } else {
-                return {
-                    ...state,
-                    cartItems: [...state.cartItems, item],
-                };
-            }
+            // } else {
+            //     return {
+            //         ...state,
+            //         cartItems: [...state.cartItems, item],
+            //     };
+            // }
 
         case REMOVE_QUANTITY:
             return {
@@ -45,11 +43,15 @@ export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action)
             }
 
 
-        case REMOVE_SINGLE_ITEM:
-            return {
-                ...state,
-                cartItems: state.cartItems.filter((i) => i.product !== action.payload),
-            };
+        // case REMOVE_SINGLE_ITEM:
+        //     console.log(action,"action");
+        //     let getAllCarts = state.cartItems[0];
+        //     let updatedCarts  = getAllCarts.CartItems.filter((item) => item.id !== action.payload);
+        //     state.cartItems[0].CartItems = updatedCarts
+        //     return {
+        //         ...state,
+        //         cartItems: state.cartItems,
+        //     };
 
         case REMOVE_CART:
             return {

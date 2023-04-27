@@ -11,7 +11,8 @@ const CartItems = ({ items }) => {
     const dataToken = JSON.parse(token)
 
     const [qnty, setQuantity] = useState(items.quantity);
-    const [totalPrice, setTotalPrice] = useState(items.total)
+    const [totalPrice, setTotalPrice] = useState(items.total);
+    const [removeQ,setRemoveQ] = useState(false)
 
     const increaseQuantity = (id) => {
 
@@ -44,12 +45,13 @@ const CartItems = ({ items }) => {
 
     const handleRemoveCartItem = (id) => {
         dispatch(removeItemsFromCart(dataToken.token, id))
+        setRemoveQ(true)
     }
 
 
   useEffect(() => {
     dispatch(getCartItems(dataToken.token, dataToken.user.id))
-  }, [dispatch])
+  }, [dispatch,removeQ])
 
     return (
         <>
