@@ -3,6 +3,7 @@ import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import { NavLink } from 'react-router-dom';
+import Card from '../Shared-Components/Card';
 
 const options = {
   items: 4,
@@ -38,25 +39,27 @@ const TrendingProducts = ({ trending }) => {
                 <OwlCarousel margin={10} {...options} >
                   {
                     trending.map((trend) => (
-                      <Fragment key={trend.id}>
-                        <div className="single-product">
-                          <div className="product-img">
-                            <span className="pro-label sale-label">sale</span>
-                            <NavLink to={`/products-details?id=${trend.id}`}>
-                              <img src={trend.ProductImages[0].path} alt={trend.ProductFlat.name} />
-                            </NavLink>
-                          </div>
 
-                          <div className="product-info clearfix text-center">
-                            <div className="fix">
-                              <h4 className="post-title">{trend.ProductFlat.name}</h4>
-                              <div className="product-price">
-                                <span className="price-1">${trend.ProductFlat.price}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Fragment>
+                      <Card products={trend} imageTag={'sale'}/>
+                      // <Fragment key={trend.id}>
+                      //   <div className="single-product">
+                      //     <div className="product-img">
+                      //       <span className="pro-label sale-label">sale</span>
+                      //       <NavLink to={`/products-details?id=${trend.id}`}>
+                      //         <img src={trend.ProductImages[0].path} alt={trend.ProductFlat.name} />
+                      //       </NavLink>
+                      //     </div>
+
+                      //     <div className="product-info clearfix text-center">
+                      //       <div className="fix">
+                      //         <h4 className="post-title">{trend.ProductFlat.name}</h4>
+                      //         <div className="product-price">
+                      //           <span className="price-1">${trend.ProductFlat.price}</span>
+                      //         </div>
+                      //       </div>
+                      //     </div>
+                      //   </div>
+                      // </Fragment>
 
                     ))
                   }

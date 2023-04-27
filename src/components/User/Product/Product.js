@@ -8,6 +8,7 @@ import { useAlert } from "react-alert";
 import Lodder from "../layout/Loader";
 import Dropdow from "./Dropdown"
 import Pagination from "react-js-pagination";
+import Card from "../Shared-Components/Card";
 
 const Product = () => {
   const dispatch = useDispatch();
@@ -207,7 +208,7 @@ const Product = () => {
                                 key={products.id}
                                 className="col-lg-4 col-md-4 col-sm-6 col-xs-12"
                               >
-                                <div className="single-product">
+                                {/* <div className="single-product">
                                   <Fragment>
                                     <div className="product-img">
                                       <span className="pro-label new-label">
@@ -239,7 +240,8 @@ const Product = () => {
                                       </div>
                                     </div>
                                   </Fragment>
-                                </div>
+                                </div> */}
+                               {products && <Card products={products}/>} 
                               </div>
                             ))}
                           </>

@@ -56,7 +56,9 @@ const ProductDetails = () => {
   const addToCartHandler = () => {
     dispatch(addItemsToCart(dataToken.token, dataToken.user.id, product.ProductFlat?.productId, quantity,));
     dispatch(getCartItems(dataToken.token, dataToken.user.id))
-    alert.success("Item Added To Cart");
+    alert.success("Item Added To Cart",{
+      timeout:1000
+    });
   };
 
   const options = {

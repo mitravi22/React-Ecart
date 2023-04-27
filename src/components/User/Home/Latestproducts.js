@@ -7,6 +7,7 @@ import { getLatestProducts } from "../../../action/HomeAction";
 import { useDispatch } from "react-redux";
 import { useAlert } from "react-alert";
 import { NavLink } from "react-router-dom";
+import Card from "../Shared-Components/Card";
 
 const options = {
   items: 4,
@@ -94,7 +95,7 @@ const Latestproducts = ({ latest }) => {
                             < Fragment key={latestproduct.id}>
                               <div key={latestproduct.id}>
                                 <div className="col-lg-4 col-md-4 col-sm-4 col-xs-12 latestproduct">
-                                  <div className="single-product">
+                                  {/* <div className="single-product">
                                     <div className="product-img">
                                       <NavLink
                                         to={`/products-details?id=${latestproduct.id}`}
@@ -122,7 +123,8 @@ const Latestproducts = ({ latest }) => {
                                         </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  </div> */}
+                                  <Card products={latestproduct} imageTag={'Sale'}/>
                                 </div>
                               </div>
                             </Fragment>
