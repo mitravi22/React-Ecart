@@ -2,64 +2,135 @@
 import axios from "axios";
 import {
     ADD_TO_CART,
-    REMOVE_CART_ITEM ,
+    REMOVE_CART,
     GET_TO_CART_ITEMS,
-    SAVE_SHIPPING_INFO
+    SAVE_SHIPPING_INFO,
+    REMOVE_QUANTITY,
+    REMOVE_SINGLE_ITEM
 } from "../constant/CartConstant"
 
 // Add to Crat
 
-export const addItemsToCart = (token,customerId, productId,quantity) => async (dispatch) => {
+export const addItemsToCart = (token, customerId, productId, quantity) => async (dispatch) => {
 
-    const { data } = await axios.post('/api/user-cart/create', {customerId, productId, quantity},{
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    })
 
-    dispatch({
-        type: ADD_TO_CART,
-        payload: data
-    })
+    try {
+
+        const { data } = await axios.post('/api/user-cart/create', { customerId, productId, quantity }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+
+        dispatch({
+            type: ADD_TO_CART,
+            payload: data
+        })
+        
+    } catch (error) {
+        console.log(error);
+    }
 
 }
 
 // Get Cart
 
-export const getCartItems = (token,customerId) => async (dispatch,getState) => {
+export const getCartItems = (token, customerId) => async (dispatch, getState) => {
 
-    const {data} = await axios.get(`/api/user-cart/items/customer/${customerId}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }, 
-    })
+    try {
 
-    console.log(data,"cart")
+        const { data } = await axios.get(`/api/user-cart/items/customer/${customerId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
 
-    dispatch({
-        type: GET_TO_CART_ITEMS,
-        payload: data.result.data.CartItems
-    })
+        dispatch({
+            type: GET_TO_CART_ITEMS,
+            payload: data.result.data
+        })
 
-    localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
+    } catch (error) {
+        console.error(error);
+    }
+
+
+    // localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
 }
 
-// Remove from cart
+// Remove Quantity 
 
-export const removeItemsFromCart = (id,token) => async (dispatch, getState) => {
+export const removeQuantity = (token, id) => async (dispatch) => {
 
-    const {data} = await axios.delete(`/api/user-cart/remove-cart/${id}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    })
+    try {
+        const { data } = await axios.delete(`/api/user-cart/remove-quantity/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
 
-    dispatch({
-        type:  REMOVE_CART_ITEM ,
-        payload: data,
-    });
+        dispatch({
+            type: REMOVE_QUANTITY,
+            payload: data,
+        });
+    } catch (error) {
+        console.error(error);
+        // Handle error
+    }
 
-    localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+    // localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+}
+
+// Remove Product from cart
+
+export const removeItemsFromCart = (token, id) => async (dispatch) => {
+
+    try {
+
+        const { data } = await axios.delete(`/api/user-cart/remove-product/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+    
+        dispatch({
+            type: REMOVE_SINGLE_ITEM,
+            payload: data,
+        });
+        
+    } catch (error) {
+        console.log(error); 
+    }
+
+    
+
+    // localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
+
+// Remove Cart 
+
+export const removeCart = (token, customerId) => async (dispatch) => {
+
+    try {
+
+        const { data } = await axios.delete(`/api/user-cart/remove-cart/${customerId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+    
+        dispatch({
+            type: REMOVE_CART,
+            payload: data,
+        });
+        
+    } catch (error) {
+        console.log(error); 
+    }
+
+    
+
+    // localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
 };
 
 // SAVE SHIPPING INFO

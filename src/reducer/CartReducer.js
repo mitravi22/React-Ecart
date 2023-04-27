@@ -1,9 +1,11 @@
 
 import {
     ADD_TO_CART,
-    REMOVE_CART_ITEM,
+    REMOVE_CART,
     GET_TO_CART_ITEMS,
-    SAVE_SHIPPING_INFO
+    SAVE_SHIPPING_INFO,
+    REMOVE_SINGLE_ITEM,
+    REMOVE_QUANTITY
 } from "../constant/CartConstant"
 
 export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
@@ -36,12 +38,26 @@ export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action)
                 };
             }
 
+        case REMOVE_QUANTITY:
+            return {
+                ...state,
+                success: action.payload
+            }
 
-        case REMOVE_CART_ITEM:
+
+        case REMOVE_SINGLE_ITEM:
             return {
                 ...state,
                 cartItems: state.cartItems.filter((i) => i.product !== action.payload),
             };
+
+        case REMOVE_CART:
+            return {
+                ...state,
+                loading: false,
+                isRemove: action.payload,
+
+            }
 
         case SAVE_SHIPPING_INFO:
             return {
