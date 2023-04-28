@@ -21,19 +21,34 @@ import MyOrder from './components/User/Profile/MyOrder';
 import Profile from './components/User/Profile/Profile';
 import Product from './components/User/Product/Product';
 import { useSelector, useDispatch } from "react-redux";
+import { getCartItems } from "./action/CartAction"
 import { LOGIN_SUCCESS } from './constant/AuthConstant';
 import Cart from './components/User/Cart/Cart';
+import Checkout from './components/User/CheckOut/Checkout'
 
 function App() {
 
     const dispatch = useDispatch()
+    const { cartItems } = useSelector((state) => state.cart)
+    const cartData = cartItems && cartItems.length > 0 ? cartItems[0]?.CartItems : null
+
+    let userDetails = localStorage.getItem('userDetails');
+    const dataToken = JSON.parse(userDetails)
+
 
     useEffect(() =>{
         validateUser()
-    })
+      // dispatch(getCartItems(dataToken.token, dataToken.user.id))
+    },[])
+
+    useEffect(() => {
+        if (dataToken) {
+            dispatch(getCartItems(dataToken.token, dataToken.user.id))
+          }      
+    },[])
 
     function validateUser(){
-        let userDetails = localStorage.getItem('userDetails');
+       
         if(userDetails){
         userDetails = JSON.parse(userDetails);
         dispatch({
@@ -65,11 +80,12 @@ function App() {
                 <Route exact path='/my-oreders' element={<MyOrder />} /> 
                 <Route exact path='/reset-password' element={<ResetPassword />} />
                 <Route exact path='/cart' element={<Cart />} />
+                <Route exact path='/checkout' element={<Checkout />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
         </Router>
-    );
+    )
 }
 
 export default App;

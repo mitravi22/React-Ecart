@@ -40,7 +40,7 @@ const TrendingProducts = ({ trending }) => {
                   {
                     trending.map((trend) => (
 
-                      <Card products={trend} imageTag={'sale'}/>
+                      <Card key={trend.id} products={trend} imageTag={'sale'}/>
                       // <Fragment key={trend.id}>
                       //   <div className="single-product">
                       //     <div className="product-img">

@@ -116,10 +116,7 @@ export const removeCart = (token, customerId) => async (dispatch) => {
             }
         })
     
-        dispatch({
-            type: REMOVE_CART,
-            payload: data,
-        });
+        dispatch(getCartItems(token, customerId))
         
     } catch (error) {
         console.log(error); 

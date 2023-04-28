@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import "./Cart.css";
 import { getCartItems, removeCart } from "../../../action/CartAction"
 import { useSelector, useDispatch } from "react-redux";
@@ -6,22 +6,41 @@ import { useAlert } from "react-alert";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CartItems from "./CartItems"
+import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import ConfirmationDialog from "./ConfirmationDialog.js"
 
 const Cart = () => {
 
   const alert = useAlert()
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const { cartItems, error } = useSelector((state) => state.cart)
-  const cartData =cartItems && cartItems.length>0?cartItems[0]?.CartItems:null
+  const cartData = cartItems && cartItems.length > 0 ? cartItems[0]?.CartItems : null
   // console.log(cartData,"lll")
+
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const token = localStorage.getItem("userDetails");
   const dataToken = JSON.parse(token)
 
   const handleRemoveAllproduct = () => {
-     dispatch(removeCart(dataToken.token, dataToken.user.id))
+    setShowConfirmDialog(true);
+
+    // dispatch(removeCart(dataToken.token, dataToken.user.id))
+    // //  toast.error('Delete All Items From Your Cart');
+    // //  navigate('/products');
   }
+
+  const handleConfirmRemove = () => {
+    dispatch(removeCart(dataToken.token, dataToken.user.id))
+    setShowConfirmDialog(false);
+  };
+
+  const handleCancelRemove = () => {
+    setShowConfirmDialog(false);
+  };
 
   useEffect(() => {
 
@@ -34,19 +53,23 @@ const Cart = () => {
   return (
 
     <Fragment>
-
-
-
       <div className="shopping-cart">
         <div className="title">
-         Shopping Cart
-         {cartData &&<button onClick={handleRemoveAllproduct} > Remove All </button>}
+          Shopping Cart
+          {cartData && <button onClick={handleRemoveAllproduct} > Remove All </button>}
+          {showConfirmDialog && (
+            <ConfirmationDialog
+              message="Are you sure you want to remove this item?"
+              onConfirm={handleConfirmRemove}
+              onCancel={handleCancelRemove}
+            />
+          )}
         </div>
         <Fragment>
           {cartData &&
             cartData && cartData.map((items) => (
 
-              <div  key={items.id}>
+              <div key={items.id}>
                 <div key={items.id} className="item-section">
                   <div className="image-section">
                     <img className='productImg' src={items.Product.ProductImages.length
@@ -59,7 +82,7 @@ const Cart = () => {
                     <span>₹ {items.price}</span>
                   </div>
 
-                    <CartItems items={items} />
+                  <CartItems items={items} />
 
                   {/* <input className="total-price" readOnly name="name" value={items.total} /> */}
 
@@ -68,10 +91,10 @@ const Cart = () => {
 
             ))
           }
-          
+
         </Fragment>
 
-        {cartData&&<div className="col-md-6 col-sm-6 col-xs-12">
+        {cartData && <div className="col-md-6 col-sm-6 col-xs-12">
           <div className="customer-login payment-details mt-30">
             <h4 className="title-1 title-border text-uppercase">payment details</h4>
             <table>
@@ -90,11 +113,18 @@ const Cart = () => {
                 </tr>
               </tbody>
             </table>
-            <button type="submit" data-text="apply coupon" className="button-one submit-button mt-15">PROCEED TO CHECKOUT</button>
+            <Link to='/checkout'>
+              <button type="submit" data-text="PROCEED TO CHECKOUT" className="button-one submit-button mt-15">PROCEED TO CHECKOUT</button>
+            </Link>
           </div>
         </div>}
 
-        {!cartData && (<h1>Cart is Empty</h1>)}
+        {!cartData && (
+          <div>
+            <h1>Cart is Empty</h1>
+            <Link to='/products'>Back</Link>
+          </div>
+        )}
       </div>
     </Fragment >
   )

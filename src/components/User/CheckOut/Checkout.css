@@ -1,0 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600&display=swap");
+
+body {
+  height: 100vh;
+  padding: 32px;
+  /*   display: flex;
+  flex-direction: column;
+  justify-content: center; */
+  background: #f2f7ff;
+  font-family: "Libre Franklin", Verdana, sans-serif;
+  color: #697280;
+}
