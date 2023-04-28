@@ -78,7 +78,6 @@ const Registration = () => {
       isValid = false;
     }
 
-
     if (!user.mobileNumber?.trim()) {
       errors.mobileNumber = "Mobile number is required";
       isValid = false;

@@ -1,15 +1,20 @@
 import React, { Fragment, useState } from 'react'
-import { getCartItems } from "../../../action/CartAction"
+import { saveShippingInfo, processCheckOut } from "../../../action/CartAction"
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from 'react-router-dom';
+import CheckoutSteps from './CheckoutSteps'
 
 const Checkout = () => {
 
   const dispatch = useDispatch();
-  const { cartItems } = useSelector((state) => state.cart)
+  const { cartItems, checkOut } = useSelector((state) => state.cart)
   const cartData = cartItems && cartItems.length > 0 ? cartItems[0]?.CartItems : null
 
-  // console.log(cartData, "ll");
+  // const { shippingInfo } = useSelector((state) => state.cart);
+
+  console.log(checkOut, "ll");
+
+  // For Billing
 
   const [user, setUser] = useState({
     firstName: "",
@@ -25,7 +30,7 @@ const Checkout = () => {
     postcode: "",
   })
 
-  const { firstName, lastName, email, phone, address1, address2, countryCode, country, state, city, postcode } = user;
+  const { firstName, lastName, email, phone, address1, country, state, city, postcode } = user;
 
   const [formErrors, setFormErrors] = useState({
     firstName: "",
@@ -40,13 +45,6 @@ const Checkout = () => {
     city: "",
     postcode: "",
   });
-
-  const [selectedCountry, setSelectedCountry] = useState('');
-
-  const handleCountryChange = (event) => {
-    setSelectedCountry(event.target.value);
-  }
-
 
   const validateForm = () => {
     let errors = {};
@@ -76,7 +74,6 @@ const Checkout = () => {
       isValid = false;
     }
 
-
     if (!user.phone?.trim()) {
       errors.phone = "Mobile number is required";
       isValid = false;
@@ -84,7 +81,6 @@ const Checkout = () => {
       errors.phone = "Enter correct contact no.";
       isValid = false;
     }
-
 
     if (!user.address1?.trim()) {
       errors.address1 = " Address is required";
@@ -133,6 +129,197 @@ const Checkout = () => {
     setFormErrors(errors);
     return isValid;
   };
+  const checkOutDataChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value })
+  }
+
+  // For Shipping
+
+  const [shipUser, setShipUser] = useState({
+    shipFirstName: "",
+    shipLastName: "",
+    shipEmail: "",
+    shipPhone: "",
+    shipAddress1: "",
+    shipAddress2: "",
+    shipCountryCode: "",
+    shipCountry: "",
+    shipState: "",
+    shipCity: "",
+    shipPostcode: "",
+  })
+
+  const { shipFirstName, shipLastName, shipEmail, shipPhone, shipAddress1, shipAddress2, shipCountryCode, shipCountry, shipState, shipCity, shipPostcode } = shipUser;
+
+  const [shipErrors, setShipErrors] = useState({
+    shipFirstName: "",
+    shipLastName: "",
+    shipEmail: "",
+    shipPhone: "",
+    shipAddress1: "",
+    shipAddress2: "",
+    shipCountryCode: "",
+    shipCountry: "",
+    shipState: "",
+    shipCity: "",
+    shipPostcode: "",
+  });
+
+  const shipValidateForm = () => {
+    let errors = {};
+    let isValid = true;
+
+    if (!shipUser.shipFirstName?.trim()) {
+      errors.shipFirstName = "First name is required";
+      isValid = false;
+    } else if (!/^[A-Za-z]{3,29}$/.test(shipUser.shipFirstName)) {
+      errors.shipFirstName = "Only alphabet is allowed and atleast fill three letter"
+      isValid = false
+    }
+
+    if (!shipUser.shipLastName?.trim()) {
+      errors.shipLastName = "Last name is required";
+      isValid = false;
+    } else if (!/^[A-Za-z]{3,29}$/.test(shipUser.shipLastName)) {
+      errors.shipLastName = "Only alphabet is allowed and atleast fill three letter"
+      isValid = false
+    }
+
+    if (!shipUser.shipEmail?.trim()) {
+      errors.shipEmail = "Email is required";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(shipUser.shipEmail)) {
+      errors.shipEmail = "Invalid email address";
+      isValid = false;
+    }
+
+    if (!shipUser.shipPhone?.trim()) {
+      errors.shipPhone = "Mobile number is required";
+      isValid = false;
+    } else if (!/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/.test(shipUser.shipPhone)) {
+      errors.shipPhone = "Enter correct contact no.";
+      isValid = false;
+    }
+
+    if (!shipUser.shipAddress1?.trim()) {
+      errors.shipAddress1 = " Address is required";
+      isValid = false;
+    } else if (!/^^[a-zA-Z0-9\s,'-]*$/.test(shipUser.shipAddress1)) {
+      errors.shipAddress1 = "Enter correct address";
+      isValid = false;
+    }
+
+    if (!shipUser.shipAddress2?.trim()) {
+      errors.shipAddress2 = " Address is required";
+      isValid = false;
+    } else if (!/^^[a-zA-Z0-9\s,'-]*$/.test(shipUser.shipAddress2)) {
+      errors.shipAddress2 = "Enter correct address";
+      isValid = false;
+    }
+
+    if (!shipUser.shipPostcode?.trim()) {
+      errors.shipPostcode = " Postcode is required";
+      isValid = false;
+    } else if (!/(^\d{5}$)|(^\d{5}-\d{5}$)/.test(shipUser.shipPostcode)) {
+      errors.shipPostcode = "Enter correct address";
+      isValid = false;
+    }
+
+    if (!shipUser.shipCountry?.trim()) {
+      errors.shipCountry = "Please select a country";
+      isValid = false;
+    }
+
+    if (!shipUser.shipCountryCode?.trim()) {
+      errors.shipCountryCode = "Please select a country code";
+      isValid = false;
+    }
+
+    if (!shipUser.shipState?.trim()) {
+      errors.shipState = "Please select state";
+      isValid = false;
+    }
+
+    if (!shipUser.shipCity?.trim()) {
+      errors.shipCity = "Please select city";
+      isValid = false;
+    }
+
+    setShipErrors(errors);
+    return isValid;
+  };
+
+  const checkOutShipChange = (e) => {
+    setShipUser({ ...setShipUser, [e.target.name]: e.target.value })
+  }
+
+  // For Payment 
+
+  const [payment, setPayment] = useState({
+    cardHolderName: "",
+    cardNumber: "",
+    cardExpiry: "",
+    cardCvc: ""
+  })
+
+  const { cardHolderName, cardNumber, cardMonth, cardYear, cardExpiry, cardCvc } = payment
+
+  const [paymentError, setPaymentError] = useState({
+    cardHolderName: "",
+    cardNumber: "",
+    cardExpiry: "",
+    cardCvc: ""
+  })
+
+  const paymentValidateForm = () => {
+    let errors = {};
+    let isValid = true;
+
+    if (!payment.cardHolderName?.trim()) {
+      errors.cardHolderName = "Name is required";
+      isValid = false;
+    } else if (!/^([A-Z][a-z]+([\s-][A-Z][a-z]+)*){1,2}$/.test(payment.cardHolderName)) {
+      errors.cardHolderName = "Only alphabet is allowed and atleast fill three letter"
+      isValid = false
+    }
+
+    if (!payment.cardNumber?.trim()) {
+      errors.cardNumber = "Card no. is required";
+      isValid = false;
+    } else if (!/^(?:5[1-5]|4[0-9]|6[0-9]|3[0-9]|35\d{2})\d{11}$/.test(payment.cardNumber)) {
+      errors.cardNumber = "Only number is allowed and 16 digit required"
+      isValid = false
+    }
+
+    if (!payment.cardExpiry?.trim()) {
+      errors.cardExpiry = "Card Expiry is required";
+      isValid = false;
+    } else if (!/^(0[1-9]|1[0-2])\/[0-9]{4}$/.test(payment.cardExpiry)) {
+      errors.cardExpiry = "Invalid month and year";
+      isValid = false;
+    }
+
+
+    if (!payment.cardCvc?.trim()) {
+      errors.cardCvc = " CVV is required";
+      isValid = false;
+    } else if (!/^[0-9]{3}$/.test(payment.cardCvc)) {
+      errors.cardCvc = "Enter correct CVV";
+      isValid = false;
+    }
+
+    setPaymentError(errors);
+    return isValid;
+  };
+
+  const checkOutPaymentChange = (e) => {
+    setPayment({ ...setPayment, [e.target.name]: e.target.value })
+  }
+
+  // Handle Checkout Submit
+
+  const token = localStorage.getItem("userDetails");
+  const dataToken = JSON.parse(token)
 
   const handleCheckOut = (e) => {
     e.preventDefault();
@@ -144,22 +331,69 @@ const Checkout = () => {
     myForm.set("email", email)
     myForm.set("phone", phone)
     myForm.set("address1", address1)
-    myForm.set("countryCode", countryCode)
     myForm.set("country", country)
     myForm.set("state", state)
     myForm.set("city", city)
     myForm.set("postcode", postcode)
 
-    validateForm()
+    myForm.set("shipFirstName", shipFirstName)
+    myForm.set("shipLastName", shipLastName)
+    myForm.set("shipEmail", shipEmail)
+    myForm.set("shipPhone", shipPhone)
+    myForm.set("shipAddress1", shipAddress1)
+    myForm.set("shipCountryCode", shipCountryCode)
+    myForm.set("shipCountry", shipCountry)
+    myForm.set("shipState", shipState)
+    myForm.set("shipCity", shipCity)
+    myForm.set("shipPostcode", shipPostcode)
+
+    myForm.set("cardHolderName", cardHolderName)
+    myForm.set("cardNumber", cardNumber)
+    myForm.set("cardMonth", cardMonth)
+    myForm.set("cardYear", cardYear)
+    myForm.set("cardCvc", cardCvc)
+
+    if (validateForm()) {
+      dispatch(processCheckOut(dataToken.token, {
+        customerId: dataToken.user.id ,
+        shippingMethod: "online",
+        shippingTitle: "online",
+        shippingDescription:"online",
+        cardNumber,
+        cardMonth: "05",
+        cardYear: "2030",
+        cardCvc,
+        paymentMethod:"stripe",
+        methodTitle: "stripe",
+        addressType: "home",
+        firstName,
+        lastName,
+        address1,
+        postcode,
+        city,
+        state,
+        country,
+        email,
+        isShippingSame: "true"
+      }))
+    }
   }
 
-  const checkOutDataChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value })
-  }
+  const [showForm, setShowForm] = useState(false);
+  const [showPaymentForm, setPaymentForm] = useState(false);
+
+  const handleCheckbox = (e) => {
+    setShowForm(e.target.checked);
+  };
+
+  const handlePaymentCheckbox = (e) => {
+    setPaymentForm(e.target.checked);
+  };
 
 
   return (
     <Fragment>
+
       <div className="heading-banner-area overlay-bg">
         <div className="container">
           <div className="row">
@@ -180,10 +414,12 @@ const Checkout = () => {
         </div>
       </div>
 
+      <CheckoutSteps activeStep={0} />
       <div className="tab-pane" id="check-out">
         <form onSubmit={handleCheckOut}>
           <div className="shop-cart-table check-out-wrap">
             <div className="row">
+
               <div className="col-md-6 col-sm-6 col-xs-12">
                 <div className="billing-details pr-20">
                   <h4 className="title-1 title-border text-uppercase mb-30">billing details</h4>
@@ -259,163 +495,197 @@ const Checkout = () => {
                   {formErrors.postcode && <div style={{ color: 'red' }}>{formErrors.postcode}</div>}
 
                 </div>
+                <label>
+                  <input type="checkbox" onChange={handleCheckbox} />
+                  Shipping address same as Billing address
+                </label>
               </div>
-              <div className="col-md-6 col-sm-6 col-xs-12 mt-xs-30">
-                <div className="billing-details pl-20">
-                  <h4 className="title-1 title-border text-uppercase mb-30">ship to different address</h4>
-                  <input type="text" name="firstName" placeholder="Your first name here..."
-                    value={user.firstName}
-                    onChange={checkOutDataChange} />
-                  {formErrors.firstName && <p style={{ color: 'red' }}>{formErrors.firstName}</p>}
 
-                  <input type="text" name='lastName' placeholder="Your last name here..."
-                    value={user.lastName}
-                    onChange={checkOutDataChange} />
-                  {formErrors.lastName && <p style={{ color: 'red' }}>{formErrors.lastName}</p>}
+              {!showForm && (
 
-                  <input type="text" name='email' placeholder="Email address here..."
-                    value={user.email}
-                    onChange={checkOutDataChange} />
-                  {formErrors.email && <p style={{ color: 'red' }}>{formErrors.email}</p>}
+                <div className="col-md-6 col-sm-6 col-xs-12 mt-xs-30">
+                  <div className="billing-details pl-20">
+                    <h4 className="title-1 title-border text-uppercase mb-30">ship to different address</h4>
 
-                  <input type="text" name='phone' placeholder="Phone here..."
-                    value={user.phone}
-                    onChange={checkOutDataChange} />
-                  {formErrors.phone && <p style={{ color: 'red' }}>{formErrors.phone}</p>}
+                    <input type="text" name="shipFirstName" placeholder="Your first name here..."
+                      value={shipUser.shipFirstName}
+                      onChange={checkOutShipChange} />
+                    {shipErrors.shipFirstName && <p style={{ color: 'red' }}>{shipErrors.shipFirstName}</p>}
 
-                  <input type="text" name='address1' placeholder="Address here..."
-                    value={user.address1}
-                    onChange={checkOutDataChange} />
-                  {formErrors.address1 && <div style={{ color: 'red' }}>{formErrors.address1}</div>}
+                    <input type="text" name='shipLastName' placeholder="Your last name here..."
+                      value={shipUser.shipLastName}
+                      onChange={checkOutShipChange} />
+                    {shipErrors.shipLastName && <p style={{ color: 'red' }}>{shipErrors.shipLastName}</p>}
 
-                  <select value={user.countryCode}
-                    onChange={(e) => setUser({ ...user, countryCode: e.target.value })} className="custom-select mb-15">
-                    <option> Select Country Code</option>
-                    <option>India(+91)</option>
-                    <option>USA(+1)</option>
-                  </select>
-                  {formErrors.countryCode && <p style={{ color: 'red' }}>{formErrors.countryCode}</p>}
+                    <input type="text" name='shipEmail' placeholder="Email address here..."
+                      value={shipUser.shipEmail}
+                      onChange={checkOutShipChange} />
+                    {shipErrors.shipEmail && <p style={{ color: 'red' }}>{shipErrors.shipEmail}</p>}
 
-                  <select value={user.country}
-                    onChange={(e) => setUser({ ...user, country: e.target.value })} className="custom-select mb-15">
-                    <option>Select Country</option>
-                    <option>India</option>
-                    <option>United States</option>
-                    <option>united Kingdom</option>
-                    <option>Australia</option>
-                    <option>Canada</option>
-                  </select>
-                  {formErrors.country && <div style={{ color: 'red' }}>{formErrors.country}</div>}
+                    <input type="text" name='shipPhone' placeholder="Phone here..."
+                      value={shipUser.shipPhone}
+                      onChange={checkOutShipChange} />
+                    {shipErrors.shipPhone && <p style={{ color: 'red' }}>{shipErrors.shipPhone}</p>}
 
-                  <select value={user.state}
-                    onChange={(e) => setUser({ ...user, state: e.target.value })} className="custom-select mb-15">
-                    <option>Select State</option>
-                    <option>MP</option>
-                    <option>New York</option>
-                    <option>London</option>
-                    <option>Melbourne</option>
-                    <option>Ottawa</option>
-                  </select>
-                  {formErrors.state && <div style={{ color: 'red' }}>{formErrors.state}</div>}
+                    <input type="text" name='shipAddress1' placeholder="Address here..."
+                      value={shipUser.shipAddress1}
+                      onChange={checkOutShipChange} />
+                    {shipErrors.shipAddress1 && <p style={{ color: 'red' }}>{shipErrors.shipAddress1}</p>}
 
-                  <select value={user.city}
-                    onChange={(e) => setUser({ ...user, city: e.target.value })} className="custom-select mb-15">
-                    <option> Select City</option>
-                    <option>Indore</option>
-                    <option>Dewas</option>
-                    <option>London</option>
-                    <option>Melbourne</option>
-                    <option>Ottawa</option>
-                  </select>
-                  {formErrors.city && <p style={{ color: 'red' }}>{formErrors.city}</p>}
+                    <select value={shipUser.shipCountryCode}
+                      onChange={(e) => setShipUser({ ...shipUser, shipCountryCode: e.target.value })} className="custom-select mb-15">
+                      <option> Select Country Code</option>
+                      <option>India(+91)</option>
+                      <option>USA(+1)</option>
+                    </select>
+                    {shipErrors.shipCountryCode && <p style={{ color: 'red' }}>{shipErrors.shipCountryCode}</p>}
 
-                  <input type="text" name='postcode' placeholder="Post Code" value={user.postcode}
-                    onChange={checkOutDataChange} />
-                  {formErrors.postcode && <p style={{ color: 'red' }}>{formErrors.postcode}</p>}
+                    <select value={shipUser.shipCountry}
+                      onChange={(e) => setShipUser({ ...shipUser, shipCountry: e.target.value })} className="custom-select mb-15">
+                      <option>Select Country</option>
+                      <option>India</option>
+                      <option>United States</option>
+                      <option>united Kingdom</option>
+                      <option>Australia</option>
+                      <option>Canada</option>
+                    </select>
+                    {shipErrors.shipCountry && <p style={{ color: 'red' }}>{shipErrors.shipCountry}</p>}
 
+                    <select value={shipUser.shipState}
+                      onChange={(e) => setShipUser({ ...shipUser, shipState: e.target.value })} className="custom-select mb-15">
+                      <option>Select shipState</option>
+                      <option>MP</option>
+                      <option>New York</option>
+                      <option>London</option>
+                      <option>Melbourne</option>
+                      <option>Ottawa</option>
+                    </select>
+                    {shipErrors.shipState && <p style={{ color: 'red' }}>{shipErrors.shipState}</p>}
+
+                    <select value={user.shipCity}
+                      onChange={(e) => setShipUser({ ...user, shipCity: e.target.value })} className="custom-select mb-15">
+                      <option> Select City</option>
+                      <option>Indore</option>
+                      <option>Dewas</option>
+                      <option>London</option>
+                      <option>Melbourne</option>
+                      <option>Ottawa</option>
+                    </select>
+                    {shipErrors.shipCity && <p style={{ color: 'red' }}>{shipErrors.shipCity}</p>}
+
+                    <input type="text" name='shipPostcode' placeholder="Post Code" value={shipUser.shipPostcode}
+                      onChange={checkOutShipChange} />
+                    {shipErrors.shipPostcode && <p style={{ color: 'red' }}>{shipErrors.shipPostcode}</p>}
+
+                  </div>
                 </div>
-              </div>
-              <div className="col-md-6 col-sm-6 col-xs-12">
-                <div className="our-order payment-details mt-60 pr-20">
-                  <h4 className="title-1 title-border text-uppercase mb-30">Your Order</h4>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th><strong>Product</strong></th>
-                        <th className="text-right"><strong>Total</strong></th>
-                      </tr>
-                    </thead>
 
-                    <tbody >
-                      {cartData &&
-                        cartData && cartData.map((items) => (
-                          <tr key={items.id}>
-                            <td>{items.name}  x {items.quantity}</td>
-                            <td className="text-right">₹ {items.price}</td>
-                          </tr>
-                        ))}
-                      <tr>
-                        <td>Cart Subtotal</td>
-                        <td className="text-right">₹ {cartItems[0]?.grandTotal}</td>
-                      </tr>
-                      <tr>
-                        <td>Shipping and Handing</td>
-                        <td className="text-right">₹ 20.00</td>
-                      </tr>
-                      <tr>
-                        <td>Order Total</td>
-                        <td className="text-right">₹ {cartItems[0]?.grandTotal + 20}</td>
-                      </tr>
-                    </tbody>
+              )}
+            </div>
+          </div>
 
+          <div className="col-md-6 col-sm-6 col-xs-12">
+            <div className="our-order payment-details mt-60 pr-20">
+              <h4 className="title-1 title-border text-uppercase mb-30">Your Order</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <th><strong>Product</strong></th>
+                    <th className="text-right"><strong>Total</strong></th>
+                  </tr>
+                </thead>
 
+                <tbody >
+                  {cartData &&
+                    cartData && cartData.map((items) => (
+                      <tr key={items.id}>
+                        <td>{items.name}  x {items.quantity}</td>
+                        <td className="text-right">₹ {items.price}</td>
+                      </tr>
+                    ))}
+                  <tr>
+                    <td>Cart Subtotal</td>
+                    <td className="text-right">₹ {cartItems[0]?.grandTotal}</td>
+                  </tr>
+                  <tr>
+                    <td>Shipping and Handing</td>
+                    <td className="text-right">₹ 20.00</td>
+                  </tr>
+                  <tr>
+                    <td>Order Total</td>
+                    <td className="text-right">₹ {cartItems[0]?.grandTotal + 20}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-                  </table>
+          <div className="col-md-6 col-sm-6 col-xs-12">
+            <div className="payment-method mt-60  pl-20">
+              <h4 className="title-1 title-border text-uppercase mb-30">payment method</h4>
+
+              <div className="w-96 mx-auto border border-gray-400 rounded-lg">
+                <div className="w-full h-auto p-4 flex items-center border-b border-gray-400">
+                  <span>
+                    Cash On Delivery   <input type="checkbox" />
+                  </span>
                 </div>
-              </div>
-
-              <div className="col-md-6 col-sm-6 col-xs-12">
-                <div className="payment-method mt-60  pl-20">
-                  <h4 className="title-1 title-border text-uppercase mb-30">payment method</h4>
-
-                  <div className="w-96 mx-auto border border-gray-400 rounded-lg">
-                    <div className="w-full h-auto p-4 flex items-center border-b border-gray-400">
-                      <h1 className="w-full">Credit Card</h1>
-                      <a href="" className="w-full text-right text-sm font-semibold text-indigo-700">Other payment methods</a>
-                    </div>
+                <br />
+                <div className="w-full h-auto p-4 flex items-center border-b border-gray-400">
+                  <span>
+                    Card Payment  <input type="checkbox" onChange={handlePaymentCheckbox} />
+                  </span>
+                </div>
+                {showPaymentForm && (
+                  <div>
                     <div className="w-full h-auto p-4">
 
                       <div className="mb-4 px-3 py-1 bg-white rounded-sm border border-gray-300 focus-within:text-gray-900 focus-within:border-gray-500">
                         <label htmlFor="cc-name" className="text-xs tracking-wide uppercase font-semibold">Name on card</label>
-                        <input id="cc-name" type="text" name="cc-name" className="w-full h-8 focus:outline-none" placeholder="e.g. John E Cash" />
+                        <input id="cc-name" type="text" name="cardHolderName" className="w-full h-8 focus:outline-none" placeholder="e.g. John E Cash"
+                          value={payment.cardHolderName}
+                          onChange={checkOutPaymentChange} />
+                        {paymentError.cardHolderName && <p style={{ color: 'red' }}>{paymentError.cardHolderName}</p>}
                       </div>
 
                       <div className="mb-4 px-3 py-1 bg-white rounded-sm border border-gray-300 focus-within:text-gray-900 focus-within:border-gray-500" />
-                      <label htmlFor="cc-number" className="text-xs tracking-wide uppercase font-semibold">Credit card number</label>
-                      <input id="cc-number" type="text" name="cc-number" className="w-full h-8 focus:outline-none" placeholder="16-digit card number" />
+                      <label htmlFor="cc-number" className="text-xs tracking-wide uppercase font-semibold">Card number</label>
+                      <input id="cc-number" type="number" name="cardNumber" className="w-full h-8 focus:outline-none" placeholder="16-digit card number"
+                        value={payment.cardNumber}
+                        onChange={checkOutPaymentChange} />
+                      {paymentError.cardNumber && <p style={{ color: 'red' }}>{paymentError.cardNumber}</p>}
                     </div>
 
                     <div className="flex mb-4 px-3 py-1 bg-white rounded-sm border border-gray-300 focus-within:border-gray-500" />
                     <div className="w-full focus-within:text-gray-900">
                       <label htmlFor="" className="text-xs tracking-wide uppercase font-semibold">Card expiry</label>
-                      <input id="cc-expiry" type="text" className="w-full h-8 focus:outline-none" placeholder="MM / YYYY" />
+                      <input id="cc-expiry" type="text" name='cardExpiry' className="w-full h-8 focus:outline-none" placeholder="MM / YYYY"
+                        value={payment.cardExpiry}
+                        onChange={checkOutPaymentChange} />
+                      {paymentError.cardExpiry && <p style={{ color: 'red' }}>{paymentError.cardExpiry}</p>}
                     </div>
 
                     <div className="w-auto focus-within:text-gray-900">
                       <label htmlFor="" className="text-xs tracking-wide uppercase font-semibold">CVV</label>
-                      <input id="cc-cvv" type="text" className="w-full h-8 focus:outline-none" maxLength={10} />
+                      <input id="cc-cvv" type="text" name='cardCvc' className="w-full h-8 focus:outline-none"
+                        value={payment.cardCvc}
+                        onChange={checkOutPaymentChange} />
+                      {paymentError.cardCvc && <p style={{ color: 'red' }}>{paymentError.cardCvc}</p>}
                     </div>
                   </div>
-                </div>
+
+                )}
+
               </div>
             </div>
           </div>
+
           <div className="form-group">
             <button
-              className="h-16 w-full rounded-sm bg-indigo-600 tracking-wide font-semibold text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-600"
-              type="submit"
+              type='submit'
             >Confirm Payment</button>
           </div>
+
         </form>
       </div>
 

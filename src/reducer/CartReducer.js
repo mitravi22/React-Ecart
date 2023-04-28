@@ -5,10 +5,14 @@ import {
     GET_TO_CART_ITEMS,
     SAVE_SHIPPING_INFO,
     REMOVE_SINGLE_ITEM,
-    REMOVE_QUANTITY
+    REMOVE_QUANTITY,
+    PROCESS_CHECKOUT_REQUEST,
+    PROCESS_CHECKOUT_SUCCESS,
+    PROCESS_CHECKOUT_FAIL
+
 } from "../constant/CartConstant"
 
-export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
+export const cartReducer = (state = { cartItems: [], shippingInfo: {}, checkOut: {} }, action) => {
 
     switch (action.type) {
 
@@ -25,16 +29,16 @@ export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action)
 
             // const isItemExist = state.cartItems.find((i) => i.product === item.product);
             // if (isItemExist) {
-                return {
-                    ...state,
-                    cartItems: action.payload?[action.payload]:[]
-                };
-            // } else {
-            //     return {
-            //         ...state,
-            //         cartItems: [...state.cartItems, item],
-            //     };
-            // }
+            return {
+                ...state,
+                cartItems: action.payload ? [action.payload] : []
+            };
+        // } else {
+        //     return {
+        //         ...state,
+        //         cartItems: [...state.cartItems, item],
+        //     };
+        // }
 
         case REMOVE_QUANTITY:
             return {
@@ -42,11 +46,10 @@ export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action)
                 success: action.payload
             }
 
-
         case REMOVE_SINGLE_ITEM:
-            console.log(action,"action");
+            console.log(action, "action");
             let getAllCarts = state.cartItems[0];
-            let updatedCarts  = getAllCarts.CartItems.filter((item) => item.id !== action.payload);
+            let updatedCarts = getAllCarts.CartItems.filter((item) => item.id !== action.payload);
             state.cartItems[0].CartItems = updatedCarts
             return {
                 ...state,
@@ -66,6 +69,26 @@ export const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action)
                 ...state,
                 shippingInfo: action.payload,
             };
+
+        case PROCESS_CHECKOUT_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            }
+
+        case PROCESS_CHECKOUT_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                checkOut: action.payload
+            }
+
+        case PROCESS_CHECKOUT_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
 
         default:
             return state;
