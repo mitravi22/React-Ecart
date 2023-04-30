@@ -110,16 +110,17 @@ const NavBar = () => {
                                         <i className="zmdi zmdi-close" onClick={() => { handleRemoveCartItem(items.id) }}></i>
                                       </span>
                                     </div>
-                                    {showConfirmDialog && (
+                                   
+                                  </div>
+                                ))
+                              }
+                               {showConfirmDialog && (
                                       <ConfirmationDialog
                                         message="Are you sure you want to remove this item?"
                                         onConfirm={handleConfirmRemove}
                                         onCancel={handleCancelRemove}
                                       />
                                     )}
-                                  </div>
-                                ))
-                              }
 
                             </div>
                             <div className="cart-totals">

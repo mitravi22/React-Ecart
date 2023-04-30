@@ -25,10 +25,11 @@ export const addItemsToCart = (token, customerId, productId, quantity) => async 
             },
         })
 
-        dispatch({
-            type: ADD_TO_CART,
-            payload: data
-        })
+        dispatch(getCartItems(token, customerId))
+        // dispatch({
+        //     type: ADD_TO_CART,
+        //     payload: data
+        // })
 
     } catch (error) {
         console.log(error);

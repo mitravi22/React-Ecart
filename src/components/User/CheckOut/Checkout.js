@@ -12,7 +12,7 @@ const Checkout = () => {
 
   // const { shippingInfo } = useSelector((state) => state.cart);
 
-  console.log(checkOut, "ll");
+  // console.log(checkOut, "ll");
 
   // For Billing
 
@@ -125,6 +125,9 @@ const Checkout = () => {
       errors.city = "Please select city";
       isValid = false;
     }
+    if (!showForm) {
+      isValid = shipValidateForm()
+    }
 
     setFormErrors(errors);
     return isValid;
@@ -204,18 +207,12 @@ const Checkout = () => {
     if (!shipUser.shipAddress1?.trim()) {
       errors.shipAddress1 = " Address is required";
       isValid = false;
-    } else if (!/^^[a-zA-Z0-9\s,'-]*$/.test(shipUser.shipAddress1)) {
+    } else if (!/^[a-zA-Z0-9\s,'-]*$/.test(shipUser.shipAddress1)) {
       errors.shipAddress1 = "Enter correct address";
       isValid = false;
     }
 
-    if (!shipUser.shipAddress2?.trim()) {
-      errors.shipAddress2 = " Address is required";
-      isValid = false;
-    } else if (!/^^[a-zA-Z0-9\s,'-]*$/.test(shipUser.shipAddress2)) {
-      errors.shipAddress2 = "Enter correct address";
-      isValid = false;
-    }
+
 
     if (!shipUser.shipPostcode?.trim()) {
       errors.shipPostcode = " Postcode is required";
@@ -246,66 +243,77 @@ const Checkout = () => {
     }
 
     setShipErrors(errors);
+    console.log(isValid, "sdfds", errors);
     return isValid;
   };
 
   const checkOutShipChange = (e) => {
-    setShipUser({ ...setShipUser, [e.target.name]: e.target.value })
+    setShipUser({ ...shipUser, [e.target.name]: e.target.value })
+    console.log(e.target.name, shipUser);
   }
 
   // For Payment 
 
   const [payment, setPayment] = useState({
+    paymentMethod: "",
     cardHolderName: "",
     cardNumber: "",
     cardExpiry: "",
     cardCvc: ""
   })
 
-  const { cardHolderName, cardNumber, cardMonth, cardYear, cardExpiry, cardCvc } = payment
+  const { cardHolderName, paymentMethod, cardNumber, cardMonth, cardYear, cardExpiry, cardCvc } = payment
 
   const [paymentError, setPaymentError] = useState({
     cardHolderName: "",
     cardNumber: "",
     cardExpiry: "",
-    cardCvc: ""
+    cardCvc: "",
+    paymentMethodError: ""
   })
 
   const paymentValidateForm = () => {
+    console.log(cardExpiry,"ss");
     let errors = {};
     let isValid = true;
-
-    if (!payment.cardHolderName?.trim()) {
-      errors.cardHolderName = "Name is required";
-      isValid = false;
-    } else if (!/^([A-Z][a-z]+([\s-][A-Z][a-z]+)*){1,2}$/.test(payment.cardHolderName)) {
-      errors.cardHolderName = "Only alphabet is allowed and atleast fill three letter"
-      isValid = false
-    }
-
-    if (!payment.cardNumber?.trim()) {
-      errors.cardNumber = "Card no. is required";
-      isValid = false;
-    } else if (!/^(?:5[1-5]|4[0-9]|6[0-9]|3[0-9]|35\d{2})\d{11}$/.test(payment.cardNumber)) {
-      errors.cardNumber = "Only number is allowed and 16 digit required"
-      isValid = false
-    }
-
-    if (!payment.cardExpiry?.trim()) {
-      errors.cardExpiry = "Card Expiry is required";
-      isValid = false;
-    } else if (!/^(0[1-9]|1[0-2])\/[0-9]{4}$/.test(payment.cardExpiry)) {
-      errors.cardExpiry = "Invalid month and year";
+    if (!payment.paymentMethod) {
+      errors.paymentMethodError = "Please select payment method";
       isValid = false;
     }
+    if (payment && payment.paymentMethod == 'stripe') {
+      if (!payment.cardHolderName?.trim()) {
+        errors.cardHolderName = "Name is required";
+        isValid = false;
+      } else if (!/^([A-Z][a-z]+([\s-][A-Z][a-z]+)*){1,2}$/.test(payment.cardHolderName)) {
+        errors.cardHolderName = "Only alphabet is allowed and atleast fill three letter"
+        isValid = false
+      }
+
+      if (!payment.cardNumber?.trim()) {
+        errors.cardNumber = "Card no. is required";
+        isValid = false;
+      } else if (!/^4[0-9]{12}(?:[0-9]{3})?$/.test(payment.cardNumber)) {
+        errors.cardNumber = "Only number is allowed and 16 digit required"
+        isValid = false
+      }
+
+      if (!payment.cardExpiry?.trim()) {
+        errors.cardExpiry = "Card Expiry is required";
+        isValid = false;
+      } else if (!/^(0[1-9]|1[0-2])\/[0-9]{4}$/.test(payment.cardExpiry)) {
+        errors.cardExpiry = "Invalid month and year";
+        isValid = false;
+      }
 
 
-    if (!payment.cardCvc?.trim()) {
-      errors.cardCvc = " CVV is required";
-      isValid = false;
-    } else if (!/^[0-9]{3}$/.test(payment.cardCvc)) {
-      errors.cardCvc = "Enter correct CVV";
-      isValid = false;
+      if (!payment.cardCvc?.trim()) {
+        errors.cardCvc = " CVV is required";
+        isValid = false;
+      } else if (!/^[0-9]{3}$/.test(payment.cardCvc)) {
+        errors.cardCvc = "Enter correct CVV";
+        isValid = false;
+      }
+
     }
 
     setPaymentError(errors);
@@ -313,7 +321,7 @@ const Checkout = () => {
   };
 
   const checkOutPaymentChange = (e) => {
-    setPayment({ ...setPayment, [e.target.name]: e.target.value })
+    setPayment({ ...payment, [e.target.name]: e.target.value })
   }
 
   // Handle Checkout Submit
@@ -326,57 +334,57 @@ const Checkout = () => {
 
     const myForm = new FormData()
 
-    myForm.set("firstName", firstName)
-    myForm.set("lastName", lastName)
-    myForm.set("email", email)
-    myForm.set("phone", phone)
-    myForm.set("address1", address1)
-    myForm.set("country", country)
-    myForm.set("state", state)
-    myForm.set("city", city)
-    myForm.set("postcode", postcode)
-
-    myForm.set("shipFirstName", shipFirstName)
-    myForm.set("shipLastName", shipLastName)
-    myForm.set("shipEmail", shipEmail)
-    myForm.set("shipPhone", shipPhone)
-    myForm.set("shipAddress1", shipAddress1)
-    myForm.set("shipCountryCode", shipCountryCode)
-    myForm.set("shipCountry", shipCountry)
-    myForm.set("shipState", shipState)
-    myForm.set("shipCity", shipCity)
-    myForm.set("shipPostcode", shipPostcode)
-
-    myForm.set("cardHolderName", cardHolderName)
-    myForm.set("cardNumber", cardNumber)
-    myForm.set("cardMonth", cardMonth)
-    myForm.set("cardYear", cardYear)
-    myForm.set("cardCvc", cardCvc)
-
-    if (validateForm()) {
-      dispatch(processCheckOut(dataToken.token, {
-        customerId: dataToken.user.id ,
-        shippingMethod: "online",
-        shippingTitle: "online",
-        shippingDescription:"online",
-        cardNumber,
-        cardMonth: "05",
-        cardYear: "2030",
-        cardCvc,
-        paymentMethod:"stripe",
-        methodTitle: "stripe",
-        addressType: "home",
-        firstName,
-        lastName,
-        address1,
-        postcode,
-        city,
-        state,
-        country,
-        email,
-        isShippingSame: "true"
-      }))
+    if (validateForm() && paymentValidateForm()) {
+      console.log(createObj(), 'obj');
+      dispatch(processCheckOut(dataToken.token, createObj()))
     }
+  }
+
+
+  const createObj = () => {
+    console.log(cardExpiry, "dkdkkdasdsaasdasdsaddkdk");
+    let dataToSend = {
+      "customerId": dataToken.user.id,
+      "shippingMethod": "online",
+      "shippingTitle": "online",
+      "shippingDescription": "online",
+      "addressType": "home",
+      "paymentMethod": paymentMethod,
+      "methodTitle": paymentMethod,
+      "firstName": firstName,
+      "lastName": lastName,
+      "companyName": "MIt",
+      "address1": address1,
+      "postcode": postcode,
+      "city": city,
+      "state": state,
+      "country": country,
+      "email": email,
+      "phone": phone,
+      "isShippingSame": showForm.toString(),
+    }
+    if (!showForm) {
+      dataToSend["shipFirstName"] = shipFirstName;
+      dataToSend["shipLastName"] = shipLastName;
+      dataToSend["shipCompanyName"] = "ship";
+      dataToSend["shipAddress1"] = shipAddress1;
+      dataToSend["shipPostcode"] = shipPostcode;
+      dataToSend["shipCity"] = shipCity;
+      dataToSend["shipState"] = shipState;
+      dataToSend["shipCountry"] = shipCountry;
+      dataToSend["shipEmail"] = shipEmail;
+      dataToSend["shipPhone"] = shipPhone;
+    }
+    if (paymentMethod === 'stripe') {
+      let splitMonthAndYear = cardExpiry.split('/')
+      console.log(cardExpiry,"ss");
+      dataToSend["cardNumber"] = cardNumber;
+      dataToSend["cardMonth"] = splitMonthAndYear[0];
+      dataToSend["cardYear"] = splitMonthAndYear[1];
+      dataToSend["cardCvc"] = cardCvc;
+    }
+
+return dataToSend
   }
 
   const [showForm, setShowForm] = useState(false);
@@ -563,7 +571,7 @@ const Checkout = () => {
                     {shipErrors.shipState && <p style={{ color: 'red' }}>{shipErrors.shipState}</p>}
 
                     <select value={user.shipCity}
-                      onChange={(e) => setShipUser({ ...user, shipCity: e.target.value })} className="custom-select mb-15">
+                      onChange={(e) => setShipUser({ ...shipUser, shipCity: e.target.value })} className="custom-select mb-15">
                       <option> Select City</option>
                       <option>Indore</option>
                       <option>Dewas</option>
@@ -627,16 +635,19 @@ const Checkout = () => {
               <div className="w-96 mx-auto border border-gray-400 rounded-lg">
                 <div className="w-full h-auto p-4 flex items-center border-b border-gray-400">
                   <span>
-                    Cash On Delivery   <input type="checkbox" />
+                    Cash On Delivery   <input value="cod" onChange={(e) => setPayment({ ...payment, paymentMethod: e.target.value })} name="paymentMethod" type="radio" />
                   </span>
                 </div>
                 <br />
                 <div className="w-full h-auto p-4 flex items-center border-b border-gray-400">
                   <span>
-                    Card Payment  <input type="checkbox" onChange={handlePaymentCheckbox} />
+                    Card Payment
+                    <input name='paymentMethod' value="stripe" type="radio" onChange={(e) => setPayment({ ...payment, paymentMethod: e.target.value })} />
                   </span>
                 </div>
-                {showPaymentForm && (
+                {paymentError.paymentMethodError && <p style={{ color: 'red' }}>{paymentError.paymentMethodError}</p>}
+
+                {(paymentMethod == 'stripe') && (
                   <div>
                     <div className="w-full h-auto p-4">
 
