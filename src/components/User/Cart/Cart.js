@@ -15,6 +15,7 @@ const Cart = () => {
   const alert = useAlert()
   const dispatch = useDispatch();
   const navigate = useNavigate()
+  const { isAuthenticated } = useSelector((state) => state.userLogin)
 
   const { cartItems, error } = useSelector((state) => state.cart)
   const cartData = cartItems && cartItems.length > 0 ? cartItems[0]?.CartItems : null
@@ -43,6 +44,11 @@ const Cart = () => {
   };
 
   useEffect(() => {
+
+    if (!isAuthenticated) {
+      navigate('/login');
+      return null;
+    }
 
     if (error) {
       alert.error(error)

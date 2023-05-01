@@ -114,6 +114,7 @@ const Product = () => {
   const setCurrentPageNo = (pageNumber) => {
     console.log(pageNumber);
     const updatedConfig = { ...config, page: pageNumber }
+
     setConfig(updatedConfig);
     setCurrentPage(pageNumber);
     dispatch(getAllProduct(updatedConfig))

@@ -12,7 +12,6 @@ import { LOGIN_SUCCESS } from '../../../constant/AuthConstant';
 const Home = () => {
 
     const alert = useAlert()
-
     const dispatch = useDispatch()
 
     const { banners, error, loading } = useSelector((state) => state.banners)

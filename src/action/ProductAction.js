@@ -29,7 +29,7 @@ import { getAllProductReducer } from '../reducer/ProductsRecucer';
 
 // Single product details
 
-export const productDetails = (id) => async (dispatch) => {
+export const productDetails = (id,token) => async (dispatch) => {
 
     try {
 
@@ -37,7 +37,11 @@ export const productDetails = (id) => async (dispatch) => {
             type: PRODUCT_DETAIL_REQUEST
         })
 
-        const { data } = await axios.get(`/api/user-product/product-details/${id}`)
+        const { data } = await axios.get(`/api/user-product/product-details/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
 
         // console.log(data,"hh")
 

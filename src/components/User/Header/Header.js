@@ -18,6 +18,14 @@ const Header = () => {
   //   console.log("logout");
   //  }
 
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+
   const handelLogOut = () => {
     localStorage.removeItem('userDetails')
     localStorage.removeItem('cartItems')
@@ -27,12 +35,18 @@ const Header = () => {
   }
 
   useEffect(() => {
-
     if (isAuthenticated === false) {
       navigate('/login')
     }
+    const token = localStorage.getItem("userDetails");
+    const dataToken = JSON.parse(token)
+    const decodedJwt = parseJwt(dataToken?.token);
 
-  }, [dispatch, isAuthenticated])
+    if (decodedJwt && decodedJwt.exp && decodedJwt.exp * 1000 <= Date.now()) {
+      handelLogOut();
+    }
+
+  }, [dispatch, isAuthenticated, navigate])
 
   return (
     <Fragment>
@@ -75,7 +89,7 @@ const Header = () => {
                               <Dropdown.Item as={NavLink} to="/my-address">My Address</Dropdown.Item>
                             </li>
                             <li>
-                              <Dropdown.Item as={NavLink} to="/my-oreders">My Orders</Dropdown.Item>
+                              <Dropdown.Item as={NavLink} to="/my-orders">My Orders</Dropdown.Item>
                             </li>
                           </ul>
                         </Dropdown.Menu>

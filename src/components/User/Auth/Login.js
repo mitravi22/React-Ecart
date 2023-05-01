@@ -62,7 +62,7 @@ const Login = () => {
     if (error) {
       alert.error(error)
     }
-
+  
     if (isAuthenticated === true) {
       navigate('/')
     }

@@ -5,25 +5,56 @@ import { Dropdown } from 'react-bootstrap';
 const MyAddress = () => {
 
   return (
-    <Dropdown>
-      <Dropdown.Toggle as={NavLink} to="" id="my-dropdown">
-        My Dropdown
-      </Dropdown.Toggle>
+    <div className="container">
+      <div className="row">
+        <div className="col-xs-12">
+          <form className="form-horizontal" role="form">
 
-      <Dropdown.Menu>
-        <ul>
-          <li>
-          <Dropdown.Item as={NavLink} to="/my-account">Option 1</Dropdown.Item>
-          </li>
-          <li>
-          <Dropdown.Item as={NavLink} to="/option1">Option 1</Dropdown.Item>
-          </li>
-          <li>
-          <Dropdown.Item as={NavLink} to="/option3">Option 3</Dropdown.Item>
-          </li>
-        </ul>
-      </Dropdown.Menu>
-    </Dropdown>
+            <h2>Address:- </h2>
+
+            <div className="form-group">
+              <label htmlFor="inputFullName" className="col-sm-2 control-label">Full Name:-</label>
+              <div className="col-sm-10">
+               
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="inputAddressLine1" className="col-sm-2 control-label">Address:-</label>
+              <div className="col-sm-10">
+               
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="inputCityTown" className="col-sm-2 control-label">City / Town:-</label>
+              <div className="col-sm-10">
+                
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="inputStateProvinceRegion" className="col-sm-2 control-label">State:-</label>
+              <div className="col-sm-10">
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="inputZipPostalCode" className="col-sm-2 control-label">Postal Code:-</label>
+              <div className="col-sm-10">
+               
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="selectCountry" className="col-sm-2 control-label">Country:-</label>
+              <div className="col-sm-10">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }
 

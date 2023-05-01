@@ -25,6 +25,8 @@ import { getCartItems } from "./action/CartAction"
 import { LOGIN_SUCCESS } from './constant/AuthConstant';
 import Cart from './components/User/Cart/Cart';
 import Checkout from './components/User/CheckOut/Checkout'
+import ThankYou from './components/User/CheckOut/ThankYou';
+import SingleOrder from './components/User/Profile/SingleOrder';
 
 function App() {
 
@@ -36,27 +38,27 @@ function App() {
     const dataToken = JSON.parse(userDetails)
 
 
-    useEffect(() =>{
+    useEffect(() => {
         validateUser()
-      // dispatch(getCartItems(dataToken.token, dataToken.user.id))
-    },[])
+        // dispatch(getCartItems(dataToken.token, dataToken.user.id))
+    }, [])
 
     useEffect(() => {
         if (dataToken) {
             dispatch(getCartItems(dataToken.token, dataToken.user.id))
-          }      
-    },[])
-
-    function validateUser(){
-       
-        if(userDetails){
-        userDetails = JSON.parse(userDetails);
-        dispatch({
-            type:LOGIN_SUCCESS,
-            payload:userDetails
-        })
         }
-    }; 
+    }, [])
+
+    function validateUser() {
+
+        if (userDetails) {
+            userDetails = JSON.parse(userDetails);
+            dispatch({
+                type: LOGIN_SUCCESS,
+                payload: userDetails
+            })
+        }
+    };
 
     const isAuthenticated = true;
 
@@ -74,11 +76,22 @@ function App() {
                 <Route exact path='/login' element={<Login />} />
                 <Route exact path='/forgot-password' element={<ForgetPassword />} />
                 {/* <ProtectedRoute exact path="/profile" element={<Profile />} /> */}
+                {/* <Route
+                    exact
+                    path='/cart'
+                    element={
+                        <ProtectedRoute>
+                            <Cart />
+                        </ProtectedRoute>
+                    }
+                /> */}
                 <Route exact path='/profile' element={<Profile />} />
                 <Route exact path='/my-account' element={<MyProfile />} />
                 <Route exact path='/my-address' element={<MyAddress />} />
-                <Route exact path='/my-oreders' element={<MyOrder />} /> 
+                <Route exact path='/my-orders' element={<MyOrder />} />
+                <Route exact path='/single-order' element={<SingleOrder />} />
                 <Route exact path='/reset-password' element={<ResetPassword />} />
+                <Route exact path='/thank-you' element={<ThankYou />} />
                 <Route exact path='/cart' element={<Cart />} />
                 <Route exact path='/checkout' element={<Checkout />} />
                 <Route path="*" element={<NotFound />} />
